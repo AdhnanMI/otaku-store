@@ -509,7 +509,7 @@ export default function AdminPage() {
                             <h2 className="admin-section-title">Orders</h2>
                         </div>
 
-                        <div className={`admin-panel-grid ${selectedOrderId ? 'has-side' : ''}`}>
+                        <div className="admin-panel-grid">
                             <div className="admin-panel-main">
                                 {ordersLoading ? (
                                     <div className="admin-state">Loading orders...</div>
@@ -569,9 +569,36 @@ export default function AdminPage() {
                                     </div>
                                 )}
                             </div>
+                        </div>
 
-                            {selectedOrderId && (
-                                <div className="admin-panel-side">
+                        {selectedOrderId && (
+                            <div
+                                className="admin-modal-overlay"
+                                onClick={() => {
+                                    setSelectedOrderId(null);
+                                    setSelectedOrder(null);
+                                    setOrderDetailsError(null);
+                                    setEditingShipping(false);
+                                }}
+                            >
+                                <div
+                                    className="admin-modal admin-modal-lg"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <button
+                                        type="button"
+                                        className="admin-modal-close"
+                                        onClick={() => {
+                                            setSelectedOrderId(null);
+                                            setSelectedOrder(null);
+                                            setOrderDetailsError(null);
+                                            setEditingShipping(false);
+                                        }}
+                                        aria-label="Close"
+                                    >
+                                        ×
+                                    </button>
+
                                     <div className="admin-card admin-order-details">
                                         {orderDetailsLoading ? (
                                             <div className="admin-state">Loading order details...</div>
@@ -588,20 +615,6 @@ export default function AdminPage() {
                                             </div>
                                         ) : selectedOrder ? (
                                             <div>
-                                                <div className="admin-order-details-head">
-                                                    <button
-                                                        type="button"
-                                                        className="admin-back-btn"
-                                                        onClick={() => {
-                                                            setSelectedOrderId(null);
-                                                            setSelectedOrder(null);
-                                                            setOrderDetailsError(null);
-                                                        }}
-                                                    >
-                                                        ← Back to Orders
-                                                    </button>
-                                                </div>
-
                                                 <h3>Order {selectedOrder.orderNumber}</h3>
 
                                                 <div className="admin-order-info">
@@ -793,8 +806,8 @@ export default function AdminPage() {
                                         ) : null}
                                     </div>
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </section>
                 )}
 
@@ -812,7 +825,7 @@ export default function AdminPage() {
                             </button>
                         </div>
 
-                        <div className={`admin-panel-grid ${productPanelOpen ? 'has-side' : ''}`}>
+                        <div className="admin-panel-grid">
                             <div className="admin-panel-main">
                                 {productsLoading ? (
                                     <div className="admin-state">Loading products...</div>
@@ -901,298 +914,301 @@ export default function AdminPage() {
                                     </div>
                                 )}
                             </div>
-
-                            {productPanelOpen && (
-                                <div className="admin-product-modal-overlay">
-                                    <div className="admin-product-modal">
-                                        <button
-                                            type="button"
-                                            className="admin-product-modal-close"
-                                            onClick={() => {
-                                                setAddingProduct(false);
-                                                setEditingProduct(null);
-                                            }}
-                                            aria-label="Close"
-                                        >
-                                            ×
-                                        </button>
-
-                                        <div className="admin-panel-side">
-                                            {addingProduct && (
-                                                <div className="admin-card admin-product-edit">
-                                                    <h3 className="admin-form-title">Add Product</h3>
-
-                                                    <div className="admin-form-grid">
-                                                        <input
-                                                            type="text"
-                                                            className="admin-input"
-                                                            placeholder="Product ID"
-                                                            value={newProductForm.id}
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    id: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <input
-                                                            type="text"
-                                                            className="admin-input"
-                                                            placeholder="Product name"
-                                                            value={newProductForm.name}
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    name: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <select
-                                                            className="admin-select"
-                                                            value={newProductForm.category}
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    category: e.target.value,
-                                                                })
-                                                            }
-                                                        >
-                                                            <option value="">Select Category</option>
-
-                                                            {categories.map((category) => (
-                                                                <option key={category.id} value={category.id}>
-                                                                    {category.label}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-
-                                                        <input
-                                                            type="text"
-                                                            className="admin-input"
-                                                            placeholder="Sub category"
-                                                            value={newProductForm.sub}
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    sub: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <input
-                                                            type="number"
-                                                            className="admin-input"
-                                                            placeholder="Price"
-                                                            value={newProductForm.price}
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    price: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <input
-                                                            type="number"
-                                                            className="admin-input"
-                                                            placeholder="Stock"
-                                                            value={newProductForm.stock}
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    stock: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <input
-                                                            type="number"
-                                                            className="admin-input"
-                                                            placeholder="Rating"
-                                                            min="0"
-                                                            max="5"
-                                                            step="0.1"
-                                                            value={newProductForm.rating}
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    rating: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <input
-                                                            type="number"
-                                                            className="admin-input"
-                                                            placeholder="Reviews"
-                                                            min="0"
-                                                            value={newProductForm.reviews}
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    reviews: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-                                                        <input
-                                                            type="file"
-                                                            className="admin-input"
-                                                            accept="image/*"
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    image: e.target.files[0] || null,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <input
-                                                            type="text"
-                                                            className="admin-input"
-                                                            placeholder="Icon"
-                                                            value={newProductForm.icon}
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    icon: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <input
-                                                            type="text"
-                                                            className="admin-input"
-                                                            placeholder="Hue"
-                                                            value={newProductForm.hue}
-                                                            onChange={(e) =>
-                                                                setNewProductForm({
-                                                                    ...newProductForm,
-                                                                    hue: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <div className="admin-form-actions">
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-primary"
-                                                                onClick={createProduct}
-                                                            >
-                                                                Save Product
-                                                            </button>
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-outline"
-                                                                onClick={() => setAddingProduct(false)}
-                                                            >
-                                                                Cancel
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-
-                                            {editingProduct && (
-                                                <div className="admin-card admin-product-edit">
-                                                    <h3 className="admin-form-title">Edit Product</h3>
-                                                    <p className="admin-form-meta">ID: {editingProduct.id}</p>
-
-                                                    <div className="admin-form-grid">
-                                                        <input
-                                                            type="text"
-                                                            className="admin-input"
-                                                            placeholder="Product name"
-                                                            value={productForm.name}
-                                                            onChange={(e) =>
-                                                                setProductForm({
-                                                                    ...productForm,
-                                                                    name: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-                                                        <select
-                                                            className="admin-select"
-                                                            value={productForm.category}
-                                                            onChange={(e) =>
-                                                                setProductForm({
-                                                                    ...productForm,
-                                                                    category: e.target.value,
-                                                                })
-                                                            }
-                                                        >
-                                                            <option value="">Select Category</option>
-
-                                                            {categories.map((category) => (
-                                                                <option key={category.id} value={category.id}>
-                                                                    {category.label}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                        <input
-                                                            type="number"
-                                                            className="admin-input"
-                                                            placeholder="Price"
-                                                            value={productForm.price}
-                                                            onChange={(e) =>
-                                                                setProductForm({
-                                                                    ...productForm,
-                                                                    price: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <input
-                                                            type="number"
-                                                            className="admin-input"
-                                                            placeholder="Stock"
-                                                            value={productForm.stock}
-                                                            onChange={(e) =>
-                                                                setProductForm({
-                                                                    ...productForm,
-                                                                    stock: e.target.value,
-                                                                })
-                                                            }
-                                                        />
-                                                        <input
-                                                            type="file"
-                                                            className="admin-input"
-                                                            accept="image/*"
-                                                            onChange={(e) =>
-                                                                setProductForm({
-                                                                    ...productForm,
-                                                                    image: e.target.files[0] || null,
-                                                                })
-                                                            }
-                                                        />
-
-                                                        <div className="admin-form-actions">
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-primary"
-                                                                onClick={updateProduct}
-                                                            >
-                                                                Save
-                                                            </button>
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-outline"
-                                                                onClick={() => setEditingProduct(null)}
-                                                            >
-                                                                Cancel
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
                         </div>
-                    </section>
 
+                        {productPanelOpen && (
+                            <div
+                                className="admin-modal-overlay"
+                                onClick={() => {
+                                    setAddingProduct(false);
+                                    setEditingProduct(null);
+                                }}
+                            >
+                                <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+                                    <button
+                                        type="button"
+                                        className="admin-modal-close"
+                                        onClick={() => {
+                                            setAddingProduct(false);
+                                            setEditingProduct(null);
+                                        }}
+                                        aria-label="Close"
+                                    >
+                                        ×
+                                    </button>
+
+                                    {addingProduct && (
+                                        <div className="admin-card admin-product-edit">
+                                            <h3 className="admin-form-title">Add Product</h3>
+
+                                            <div className="admin-form-grid">
+                                                <input
+                                                    type="text"
+                                                    className="admin-input"
+                                                    placeholder="Product ID"
+                                                    value={newProductForm.id}
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            id: e.target.value,
+                                                        })
+                                                    }
+                                                />
+
+                                                <input
+                                                    type="text"
+                                                    className="admin-input"
+                                                    placeholder="Product name"
+                                                    value={newProductForm.name}
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            name: e.target.value,
+                                                        })
+                                                    }
+                                                />
+
+                                                <select
+                                                    className="admin-select"
+                                                    value={newProductForm.category}
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            category: e.target.value,
+                                                        })
+                                                    }
+                                                >
+                                                    <option value="">Select Category</option>
+
+                                                    {categories.map((category) => (
+                                                        <option key={category.id} value={category.id}>
+                                                            {category.label}
+                                                        </option>
+                                                    ))}
+                                                </select>
+
+                                                <input
+                                                    type="text"
+                                                    className="admin-input"
+                                                    placeholder="Sub category"
+                                                    value={newProductForm.sub}
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            sub: e.target.value,
+                                                        })
+                                                    }
+                                                />
+
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    placeholder="Price"
+                                                    value={newProductForm.price}
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            price: e.target.value,
+                                                        })
+                                                    }
+                                                />
+
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    placeholder="Stock"
+                                                    value={newProductForm.stock}
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            stock: e.target.value,
+                                                        })
+                                                    }
+                                                />
+
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    placeholder="Rating"
+                                                    min="0"
+                                                    max="5"
+                                                    step="0.1"
+                                                    value={newProductForm.rating}
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            rating: e.target.value,
+                                                        })
+                                                    }
+                                                />
+
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    placeholder="Reviews"
+                                                    min="0"
+                                                    value={newProductForm.reviews}
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            reviews: e.target.value,
+                                                        })
+                                                    }
+                                                />
+                                                <input
+                                                    type="file"
+                                                    className="admin-input"
+                                                    accept="image/*"
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            image: e.target.files[0] || null,
+                                                        })
+                                                    }
+                                                />
+
+                                                <input
+                                                    type="text"
+                                                    className="admin-input"
+                                                    placeholder="Icon"
+                                                    value={newProductForm.icon}
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            icon: e.target.value,
+                                                        })
+                                                    }
+                                                />
+
+                                                <input
+                                                    type="text"
+                                                    className="admin-input"
+                                                    placeholder="Hue"
+                                                    value={newProductForm.hue}
+                                                    onChange={(e) =>
+                                                        setNewProductForm({
+                                                            ...newProductForm,
+                                                            hue: e.target.value,
+                                                        })
+                                                    }
+                                                />
+
+                                                <div className="admin-form-actions">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary"
+                                                        onClick={createProduct}
+                                                    >
+                                                        Save Product
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-outline"
+                                                        onClick={() => setAddingProduct(false)}
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {editingProduct && (
+                                        <div className="admin-card admin-product-edit">
+                                            <h3 className="admin-form-title">Edit Product</h3>
+                                            <p className="admin-form-meta">ID: {editingProduct.id}</p>
+
+                                            <div className="admin-form-grid">
+                                                <input
+                                                    type="text"
+                                                    className="admin-input"
+                                                    placeholder="Product name"
+                                                    value={productForm.name}
+                                                    onChange={(e) =>
+                                                        setProductForm({
+                                                            ...productForm,
+                                                            name: e.target.value,
+                                                        })
+                                                    }
+                                                />
+                                                <select
+                                                    className="admin-select"
+                                                    value={productForm.category}
+                                                    onChange={(e) =>
+                                                        setProductForm({
+                                                            ...productForm,
+                                                            category: e.target.value,
+                                                        })
+                                                    }
+                                                >
+                                                    <option value="">Select Category</option>
+
+                                                    {categories.map((category) => (
+                                                        <option key={category.id} value={category.id}>
+                                                            {category.label}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    placeholder="Price"
+                                                    value={productForm.price}
+                                                    onChange={(e) =>
+                                                        setProductForm({
+                                                            ...productForm,
+                                                            price: e.target.value,
+                                                        })
+                                                    }
+                                                />
+
+                                                <input
+                                                    type="number"
+                                                    className="admin-input"
+                                                    placeholder="Stock"
+                                                    value={productForm.stock}
+                                                    onChange={(e) =>
+                                                        setProductForm({
+                                                            ...productForm,
+                                                            stock: e.target.value,
+                                                        })
+                                                    }
+                                                />
+                                                <input
+                                                    type="file"
+                                                    className="admin-input"
+                                                    accept="image/*"
+                                                    onChange={(e) =>
+                                                        setProductForm({
+                                                            ...productForm,
+                                                            image: e.target.files[0] || null,
+                                                        })
+                                                    }
+                                                />
+
+                                                <div className="admin-form-actions">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-primary"
+                                                        onClick={updateProduct}
+                                                    >
+                                                        Save
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-outline"
+                                                        onClick={() => setEditingProduct(null)}
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </section>
                 )}
 
                 {/* ============================ CATEGORIES ============================= */}
@@ -1209,7 +1225,7 @@ export default function AdminPage() {
                             </button>
                         </div>
 
-                        <div className={`admin-panel-grid ${categoryPanelOpen ? 'has-side' : ''}`}>
+                        <div className="admin-panel-grid">
                             <div className="admin-panel-main">
                                 {categoriesLoading ? (
                                     <div className="admin-state">Loading categories...</div>
@@ -1292,9 +1308,29 @@ export default function AdminPage() {
                                     </div>
                                 )}
                             </div>
+                        </div>
 
-                            {categoryPanelOpen && (
-                                <div className="admin-panel-side">
+                        {categoryPanelOpen && (
+                            <div
+                                className="admin-modal-overlay"
+                                onClick={() => {
+                                    setAddingCategory(false);
+                                    setEditingCategory(null);
+                                }}
+                            >
+                                <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+                                    <button
+                                        type="button"
+                                        className="admin-modal-close"
+                                        onClick={() => {
+                                            setAddingCategory(false);
+                                            setEditingCategory(null);
+                                        }}
+                                        aria-label="Close"
+                                    >
+                                        ×
+                                    </button>
+
                                     {addingCategory && (
                                         <div className="admin-card admin-category-edit">
                                             <h3 className="admin-form-title">Add Category</h3>
@@ -1493,8 +1529,8 @@ export default function AdminPage() {
                                         </div>
                                     )}
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </section>
                 )}
             </div>
