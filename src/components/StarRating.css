@@ -1,0 +1,20 @@
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.star-rating svg {
+  fill: #fbbf24;
+  color: #fbbf24;
+}
+
+.star-rating-value {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.star-rating-reviews {
+  color: var(--color-text-faint);
+}

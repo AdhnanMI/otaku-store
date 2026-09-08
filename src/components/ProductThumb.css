@@ -1,0 +1,44 @@
+.product-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.product-thumb.size-lg {
+  aspect-ratio: 4 / 3;
+}
+
+.product-thumb svg {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Gradient presets — edit these hex pairs to change placeholder colors */
+.hue-red { background: linear-gradient(135deg, #ef4444, #be123c); }
+.hue-red-dark { background: linear-gradient(135deg, #dc2626, #171717); }
+.hue-red-deep { background: linear-gradient(135deg, #b91c1c, #171717); }
+.hue-slate { background: linear-gradient(135deg, #475569, #0f172a); }
+.hue-slate-light { background: linear-gradient(135deg, #94a3b8, #334155); }
+.hue-amber { background: linear-gradient(135deg, #f59e0b, #c2410c); }
+.hue-orange { background: linear-gradient(135deg, #f97316, #b91c1c); }
+.hue-yellow-orange { background: linear-gradient(135deg, #eab308, #c2410c); }
+.hue-sky { background: linear-gradient(135deg, #38bdf8, #1d4ed8); }
+.hue-sky-light { background: linear-gradient(135deg, #7dd3fc, #1e40af); }
+.hue-blue { background: linear-gradient(135deg, #3b82f6, #4338ca); }
+.hue-indigo { background: linear-gradient(135deg, #6366f1, #6d28d9); }
+.hue-violet { background: linear-gradient(135deg, #8b5cf6, #6b21a8); }
+.hue-violet-deep { background: linear-gradient(135deg, #7c3aed, #581c87); }
+.hue-purple { background: linear-gradient(135deg, #a855f7, #6b21a8); }
+.hue-cyan { background: linear-gradient(135deg, #22d3ee, #0f766e); }
+.hue-teal { background: linear-gradient(135deg, #14b8a6, #065f46); }
+.hue-emerald { background: linear-gradient(135deg, #10b981, #14532d); }
+.hue-green { background: linear-gradient(135deg, #22c55e, #14532d); }
+.hue-neutral { background: linear-gradient(135deg, #737373, #262626); }
+.hue-neutral-light { background: linear-gradient(135deg, #a3a3a3, #404040); }
+.hue-neutral-dark { background: linear-gradient(135deg, #404040, #171717); }
+.hue-gold { background: linear-gradient(135deg, #f59e0b, #ea580c); }
+.hue-orange-light { background: linear-gradient(135deg, #fb923c, #c2410c); }
+.hue-red-gold { background: linear-gradient(135deg, #dc2626, #ca8a04); }

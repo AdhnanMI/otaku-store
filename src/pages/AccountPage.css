@@ -1,0 +1,453 @@
+.account-page {
+  padding: 24px 0 40px;
+}
+
+.account-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Loading */
+.account-loading {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+/* Header */
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 24px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #171717, #0a0a0a);
+  color: #fff;
+}
+
+.account-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-red);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.account-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-red);
+}
+
+.account-header h1 {
+  margin-top: 4px;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.account-header h1 span {
+  color: var(--color-red);
+}
+
+.account-email {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #a3a3a3;
+}
+
+/* Sections */
+.account-section {
+  margin-top: 28px;
+}
+
+.account-section h2 {
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Action cards */
+.account-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.account-action {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.account-action:hover {
+  border-color: var(--color-red);
+  background: var(--color-hover-bg);
+  transform: translateY(-1px);
+}
+
+.account-action>svg {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--color-text-faint);
+}
+
+.account-action-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-red-tint);
+  color: var(--color-red);
+}
+
+.account-action-content {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.account-action-content strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.account-action-content span {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* Profile */
+.account-profile-card {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.account-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+}
+
+.account-profile-row+.account-profile-row {
+  border-top: 1px solid var(--color-border);
+}
+
+.account-profile-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-hover-bg);
+  color: var(--color-text-muted);
+}
+
+.account-profile-row>div:last-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.account-profile-row span {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.account-profile-row strong {
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* Logout */
+.account-logout {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-red);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.account-logout:hover {
+  border-color: var(--color-red);
+  background: var(--color-red-tint);
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .account-page {
+    padding: 40px 32px 60px;
+  }
+
+  .account-header {
+    padding: 32px;
+  }
+
+  .account-avatar {
+    width: 84px;
+    height: 84px;
+    font-size: 32px;
+  }
+
+  .account-header h1 {
+    font-size: 30px;
+  }
+
+  .account-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .account-logout {
+    width: auto;
+    min-width: 150px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 639px) {
+  .account-page {
+    padding: 16px 16px 100px;
+  }
+
+  .account-header {
+    gap: 14px;
+    padding: 20px;
+  }
+
+  .account-avatar {
+    width: 58px;
+    height: 58px;
+    font-size: 22px;
+  }
+
+  .account-header h1 {
+    font-size: 20px;
+  }
+
+  .account-email {
+    max-width: 220px;
+    overflow-wrap: anywhere;
+  }
+
+  .account-section {
+    margin-top: 24px;
+  }
+
+  .account-action {
+    min-height: 72px;
+  }
+
+  .account-action:hover {
+    transform: none;
+  }
+
+  .account-logout {
+    min-height: 46px;
+  }
+}
+
+/* =========================================================
+   ACCOUNT SKELETON LOADING
+   ========================================================= */
+
+.account-skeleton {
+  pointer-events: none;
+}
+
+.account-skeleton .skeleton {
+  display: block;
+  background: var(--color-border);
+  border-radius: 6px;
+  animation: account-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* Header */
+
+.account-skeleton-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50% !important;
+  flex-shrink: 0;
+}
+
+.account-skeleton-eyebrow {
+  width: 75px;
+  height: 9px;
+}
+
+.account-skeleton-title {
+  width: 220px;
+  height: 25px;
+  margin-top: 9px;
+}
+
+.account-skeleton-email {
+  width: 170px;
+  height: 10px;
+  margin-top: 9px;
+}
+
+/* Section headings */
+
+.account-skeleton-section-title {
+  width: 100px;
+  height: 16px;
+  margin-bottom: 14px;
+}
+
+/* Account actions */
+
+.account-skeleton .account-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.account-skeleton .account-action {
+  pointer-events: none;
+}
+
+.account-skeleton-action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md) !important;
+  flex-shrink: 0;
+}
+
+.account-skeleton-action-title {
+  width: 90px;
+  height: 12px;
+}
+
+.account-skeleton-action-text {
+  width: 210px;
+  max-width: 100%;
+  height: 9px;
+  margin-top: 7px;
+}
+
+.account-skeleton-arrow {
+  width: 18px;
+  height: 18px;
+  border-radius: 50% !important;
+  flex-shrink: 0;
+}
+
+/* Profile */
+
+.account-skeleton .account-profile-card {
+  pointer-events: none;
+}
+
+.account-skeleton-profile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50% !important;
+  flex-shrink: 0;
+}
+
+.account-skeleton-profile-label {
+  width: 40px;
+  height: 9px;
+}
+
+.account-skeleton-profile-value {
+  width: 140px;
+  height: 12px;
+  margin-top: 7px;
+}
+
+/* Logout */
+
+.account-skeleton-logout {
+  width: 100px;
+  height: 38px;
+  margin-top: 24px;
+  border-radius: var(--radius-md) !important;
+}
+
+/* Animation */
+
+@keyframes account-skeleton-pulse {
+
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 767px) {
+  .account-skeleton-avatar {
+    width: 56px;
+    height: 56px;
+  }
+
+  .account-skeleton-title {
+    width: 180px;
+    height: 23px;
+  }
+
+  .account-skeleton-email {
+    width: 150px;
+  }
+
+  .account-skeleton-action-text {
+    width: 170px;
+  }
+
+  .account-skeleton-profile-value {
+    width: 120px;
+  }
+}

@@ -1,0 +1,511 @@
+/* =========================================
+   NAVBAR
+   ========================================= */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  backdrop-filter: blur(6px);
+}
+
+
+/* =========================================
+   NAVBAR ROW
+   ========================================= */
+
+.navbar-row {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+}
+
+@media (min-width: 768px) {
+  .navbar-row {
+    padding: 12px 32px;
+  }
+}
+
+
+/* =========================================
+   HAMBURGER
+   Visible on mobile + tablet
+   Hidden on desktop (1024px+)
+   ========================================= */
+
+.navbar-hamburger {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.navbar-hamburger:hover {
+  color: var(--color-red);
+}
+
+@media (min-width: 1024px) {
+  .navbar-hamburger {
+    display: none;
+  }
+}
+
+
+/* =========================================
+   DESKTOP NAV LINKS
+   Hidden on mobile + tablet
+   ========================================= */
+
+.navbar-links {
+  display: none;
+  align-items: center;
+  gap: 24px;
+  margin-left: 8px;
+}
+
+@media (min-width: 1024px) {
+  .navbar-links {
+    display: flex;
+  }
+}
+
+.navbar-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.navbar-link:hover {
+  color: var(--color-red);
+}
+
+
+/* =========================================
+   DESKTOP SEARCH
+   ========================================= */
+
+.navbar-search {
+  display: none;
+  flex: 1;
+  max-width: 420px;
+  margin-left: auto;
+}
+
+@media (min-width: 1024px) {
+  .navbar-search {
+    display: flex;
+  }
+}
+
+
+/* =========================================
+   MOBILE SEARCH
+   Visible below 1024px
+   ========================================= */
+
+.navbar-search.mobile {
+  display: flex;
+  margin: 0 16px 12px;
+}
+
+@media (min-width: 1024px) {
+  .navbar-search.mobile {
+    display: none;
+  }
+}
+
+
+/* =========================================
+   SEARCH WRAPPER
+   ========================================= */
+
+.navbar-search-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.navbar-search-wrap svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-faint);
+}
+
+.navbar-search-input {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-hover-bg);
+  padding: 9px 12px 9px 34px;
+  font-size: 14px;
+  color: var(--color-text);
+  box-sizing: border-box;
+}
+
+.navbar-search-input::placeholder {
+  color: var(--color-text-faint);
+}
+
+.navbar-search-input:focus {
+  outline: none;
+  border-color: var(--color-red);
+  box-shadow: 0 0 0 1px var(--color-red);
+}
+
+
+/* =========================================
+   DESKTOP RIGHT ACTIONS
+   Hidden on mobile + tablet
+   ========================================= */
+
+.navbar-actions {
+  display: none;
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+}
+
+@media (min-width: 1024px) {
+  .navbar-actions {
+    display: flex;
+  }
+}
+
+.navbar-actions.no-search {
+  margin-left: auto;
+}
+
+
+/* =========================================
+   DESKTOP ICON BUTTON
+   ========================================= */
+
+.navbar-icon-btn {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.navbar-icon-btn:hover {
+  color: var(--color-red);
+}
+
+
+/* =========================================
+   DESKTOP ICON LINKS
+   ========================================= */
+
+.navbar-icon-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.navbar-icon-link:hover {
+  color: var(--color-red);
+}
+
+
+/* Show Wishlist / Cart labels only on larger desktop */
+
+.navbar-icon-link-label {
+  display: none;
+}
+
+@media (min-width: 1200px) {
+  .navbar-icon-link-label {
+    display: inline;
+  }
+}
+
+
+/* =========================================
+   ICON WRAPPER
+   ========================================= */
+
+.navbar-icon-wrap {
+  position: relative;
+  display: flex;
+}
+
+
+/* =========================================
+   BADGE
+   ========================================= */
+
+.navbar-badge {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-red);
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+}
+
+
+/* =========================================
+   LOGIN BUTTON
+   ========================================= */
+
+.navbar-login-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  padding: 7px 14px;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.navbar-login-btn:hover {
+  border-color: var(--color-red);
+  color: var(--color-red);
+}
+
+
+/* =========================================
+   MOBILE / TABLET RIGHT ICONS
+   Visible below 1024px
+   ========================================= */
+
+.navbar-mobile-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Hide Wishlist, Cart and Login on small mobile screens */
+@media (max-width: 767px) {
+  .navbar-mobile-actions {
+    display: none;
+  }
+}
+
+/* Hide them again on desktop */
+@media (min-width: 1024px) {
+  .navbar-mobile-actions {
+    display: none;
+  }
+}
+
+.navbar-mobile-actions a,
+.navbar-mobile-actions button,
+.clr button {
+  color: var(--color-text);
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.navbar-mobile-actions a:hover,
+.navbar-mobile-actions button:hover {
+  color: var(--color-red);
+}
+
+
+/* =========================================
+   DRAWER OVERLAY
+   IMPORTANT:
+   Drawer works on mobile + tablet
+   Hidden only on desktop (1024px+)
+   ========================================= */
+
+.navbar-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  height: 100vh;
+  pointer-events: none;
+}
+
+.navbar-drawer-overlay.open {
+  pointer-events: auto;
+}
+
+@media (min-width: 1024px) {
+  .navbar-drawer-overlay {
+    display: none;
+  }
+}
+
+
+/* =========================================
+DRAWER BACKDROP
+========================================= */
+
+.navbar-drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.289);
+  height: 100vh;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.navbar-drawer-overlay.open .navbar-drawer-backdrop {
+  opacity: 1;
+}
+
+
+/* =========================================
+   DRAWER
+   Slides in from the left, like an Offcanvas panel
+   ========================================= */
+
+.navbar-drawer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 280px;
+  max-width: 85vw;
+  background: var(--color-surface);
+  padding: 20px;
+  box-shadow: var(--shadow-pop);
+  box-sizing: border-box;
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.navbar-drawer-overlay.open .navbar-drawer {
+  transform: translateX(0);
+}
+
+
+/* =========================================
+   DRAWER HEADER
+   ========================================= */
+
+.navbar-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+/* =========================================
+   DRAWER CLOSE BUTTON
+   ========================================= */
+
+.navbar-drawer-close {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.navbar-drawer-close:hover {
+  color: var(--color-red);
+}
+
+
+/* =========================================
+   DRAWER LINKS
+   ========================================= */
+
+.navbar-drawer-links {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.navbar-drawer-link {
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.navbar-drawer-link:hover {
+  background: var(--color-hover-bg);
+}
+
+
+/* =========================================
+   DRAWER LOGIN / SIGNUP CTA
+   ========================================= */
+
+.navbar-drawer-cta {
+  margin-top: 12px;
+  border-radius: var(--radius-md);
+  background: var(--color-red);
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar-drawer-cta:hover {
+  opacity: 0.9;
+}
+
+
+/* =========================================
+   RESPONSIVE BEHAVIOR SUMMARY
+   =========================================
+
+   < 768px
+   - Hamburger
+   - Mobile icons
+   - Mobile search
+   - Drawer
+
+   768px - 1023px
+   - Hamburger
+   - Mobile icons
+   - Mobile search
+   - Drawer
+   - Wider navbar padding
+
+   >= 1024px
+   - Desktop navigation
+   - Desktop search
+   - Desktop actions
+   - No drawer
+   ========================================= */

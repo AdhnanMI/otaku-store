@@ -1,0 +1,42 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.logo-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-red), #171717);
+  flex-shrink: 0;
+}
+
+.logo-badge svg {
+  color: #fff;
+}
+
+.logo-text {
+  line-height: 1;
+}
+
+.logo-text-top {
+  display: block;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--color-text);
+}
+
+.logo-text-bottom {
+  display: block;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--color-red);
+  margin-top: -2px;
+}
