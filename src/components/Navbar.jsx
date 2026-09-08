@@ -149,9 +149,6 @@ export default function Navbar({ showSearch = true }) {
                 Admin Control
               </Link>
             )}
-            <Link to="/login" onClick={closeDrawer} className="navbar-drawer-cta">
-              Log In / Sign Up
-            </Link>
           </nav>
         </div>
       </div>
