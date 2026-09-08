@@ -139,3 +139,13 @@ model WishlistItem {
 
   @@unique([wishlistId, productId])
 }
+
+model PasswordResetOtp {
+  id         String   @id @default(cuid())
+  email      String
+  otpHash    String
+  resetToken String?  @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+}
+

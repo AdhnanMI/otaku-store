@@ -94,7 +94,14 @@ export default function SignAndLoginPage() {
   const isLogin = mode === 'login';
   const navigate = useNavigate();
   const [authError, setAuthError] = useState('');
-
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [forgotStep, setForgotStep] = useState('email');
+  const [otp, setOtp] = useState('');
+  const [resetToken, setResetToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   return (
     <Layout showSearch={false}>
@@ -104,6 +111,7 @@ export default function SignAndLoginPage() {
             <button
               onClick={() => {
                 setAuthError('');
+                setForgotPassword(false);
                 setMode('login');
               }}
               className={`auth-toggle-btn ${isLogin ? 'active' : ''}`}
@@ -113,6 +121,7 @@ export default function SignAndLoginPage() {
             <button
               onClick={() => {
                 setAuthError('');
+                setForgotPassword(false);
                 setMode('signup');
               }}
               className={`auth-toggle-btn ${!isLogin ? 'active' : ''}`}
@@ -126,7 +135,285 @@ export default function SignAndLoginPage() {
           <ArtPanel mode={mode} />
 
           <div className="auth-form-panel">
-            {isLogin ? (
+            {forgotPassword ? (
+              <>
+                {forgotStep === 'email' ? (
+                  <>
+                    <h1 className="auth-form-title">Forgot Password?</h1>
+
+                    <p className="auth-form-subtitle">
+                      Enter your email address and we'll send you a verification code.
+                    </p>
+
+                    <form
+                      className="auth-form"
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+
+                        setAuthError('');
+                        setForgotLoading(true);
+
+                        try {
+                          const data = await apiFetch('/auth/forgot-password/request', {
+                            method: 'POST',
+                            body: JSON.stringify({ email }),
+                          });
+
+                          console.log('OTP REQUEST SUCCESS:', data);
+                          setForgotStep('otp');
+                        } catch (error) {
+                          console.error(error);
+                          setAuthError(error.message);
+                        } finally {
+                          setForgotLoading(false);
+                        }
+                      }}
+                    >
+                      <div>
+                        <label className="auth-field-label">Email Address</label>
+
+                        <div className="auth-input-wrap">
+                          <Mail size={16} />
+
+                          <input
+                            type="email"
+                            placeholder="Enter your email"
+                            className="auth-input with-icon"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      {authError && (
+                        <p className="auth-error">
+                          {authError}
+                        </p>
+                      )}
+
+                      <button
+                        type="submit"
+                        className="btn btn-primary auth-submit-btn"
+                        disabled={forgotLoading}
+                      >
+                        {forgotLoading ? 'Sending OTP...' : 'Send OTP'}
+                      </button>
+                    </form>
+
+                    <p className="auth-switch-row">
+                      Remember your password?{' '}
+                      <button
+                        type="button"
+                        className="auth-switch-btn"
+                        onClick={() => {
+                          setAuthError('');
+                          setForgotPassword(false);
+                          setForgotStep('email');
+                          setOtp('');
+                        }}
+                      >
+                        Back to Login
+                      </button>
+                    </p>
+                  </>
+                ) : forgotStep === 'otp' ? (
+                  <>
+                    <h1 className="auth-form-title">Enter OTP</h1>
+
+                    <p className="auth-form-subtitle">
+                      Enter the 6-digit verification code sent to your email.
+                    </p>
+
+                    <form
+                      className="auth-form"
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+
+                        setAuthError('');
+                        setForgotLoading(true);
+
+                        try {
+                          const data = await apiFetch('/auth/forgot-password/verify', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                              email,
+                              otp,
+                            }),
+                          });
+
+                          console.log('OTP VERIFY SUCCESS:', data);
+
+                          setResetToken(data.resetToken);
+                          setForgotStep('password');
+                          // Temporary for testing.
+                          console.log('RESET TOKEN:', data.resetToken);
+                        } catch (error) {
+                          console.error('OTP VERIFY FAILED:', error);
+                          setAuthError(error.message);
+                        } finally {
+                          setForgotLoading(false);
+                        }
+                      }}
+                    >
+                      <div>
+                        <label className="auth-field-label">Verification Code</label>
+
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={6}
+                          placeholder="Enter 6-digit OTP"
+                          className="auth-input"
+                          value={otp}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '');
+                            setOtp(value);
+                          }}
+                          required
+                        />
+                      </div>
+
+                      {authError && (
+                        <p className="auth-error">
+                          {authError}
+                        </p>
+                      )}
+
+                      <button
+                        type="submit"
+                        className="btn btn-primary auth-submit-btn"
+                        disabled={forgotLoading || otp.length !== 6}
+                      >
+                        {forgotLoading ? 'Verifying...' : 'Verify OTP'}
+                      </button>
+                    </form>
+
+                    <p className="auth-switch-row">
+                      Didn&apos;t receive the code?{' '}
+                      <button
+                        type="button"
+                        className="auth-switch-btn"
+                        onClick={() => {
+                          setAuthError('');
+                          setForgotStep('email');
+                          setOtp('');
+                        }}
+                      >
+                        Try Again
+                      </button>
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h1 className="auth-form-title">Create New Password</h1>
+
+                    <p className="auth-form-subtitle">
+                      Enter a new password for your Otaku Store account.
+                    </p>
+
+                    <form
+                      className="auth-form"
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+
+                        setAuthError('');
+
+                        if (newPassword.length < 6) {
+                          setAuthError('Password must be at least 6 characters.');
+                          return;
+                        }
+
+                        if (newPassword !== confirmPassword) {
+                          setAuthError('Passwords do not match.');
+                          return;
+                        }
+
+                        setForgotLoading(true);
+
+                        try {
+                          const data = await apiFetch('/auth/forgot-password/reset', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                              resetToken,
+                              newPassword,
+                            }),
+                          });
+
+                          console.log('PASSWORD RESET SUCCESS:', data);
+
+                          setForgotPassword(false);
+                          setForgotStep('email');
+                          setOtp('');
+                          setResetToken('');
+                          setNewPassword('');
+                          setConfirmPassword('');
+                          setAuthError('');
+                          setMode('login');
+                        } catch (error) {
+                          console.error('PASSWORD RESET FAILED:', error);
+                          setAuthError(error.message);
+                        } finally {
+                          setForgotLoading(false);
+                        }
+                      }}
+                    >
+                      <div>
+                        <label className="auth-field-label">New Password</label>
+
+                        <PasswordInput
+                          placeholder="Enter new password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                      </div>
+
+                      <div>
+                        <label className="auth-field-label">Confirm Password</label>
+
+                        <PasswordInput
+                          placeholder="Confirm new password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                      </div>
+
+                      {authError && (
+                        <p className="auth-error">
+                          {authError}
+                        </p>
+                      )}
+
+                      <button
+                        type="submit"
+                        className="btn btn-primary auth-submit-btn"
+                        disabled={forgotLoading}
+                      >
+                        {forgotLoading ? 'Resetting Password...' : 'Reset Password'}
+                      </button>
+                    </form>
+
+                    <p className="auth-switch-row">
+                      Want to start over?{' '}
+                      <button
+                        type="button"
+                        className="auth-switch-btn"
+                        onClick={() => {
+                          setAuthError('');
+                          setForgotStep('email');
+                          setOtp('');
+                          setResetToken('');
+                          setNewPassword('');
+                          setConfirmPassword('');
+                        }}
+                      >
+                        Start Again
+                      </button>
+                    </p>
+                  </>
+                )}
+              </>
+            ) : isLogin ? (
               <>
                 <h1 className="auth-form-title">Login</h1>
                 <p className="auth-form-subtitle">Welcome back! Please login to continue.</p>
@@ -134,6 +421,9 @@ export default function SignAndLoginPage() {
                   className="auth-form"
                   onSubmit={async (e) => {
                     e.preventDefault();
+
+                    setAuthError('');
+                    setAuthLoading(true);
 
                     try {
                       const data = await apiFetch('/auth/login', {
@@ -150,6 +440,8 @@ export default function SignAndLoginPage() {
                     } catch (error) {
                       console.error(error);
                       setAuthError(error.message);
+                    } finally {
+                      setAuthLoading(false);
                     }
                   }}
                 >
@@ -179,12 +471,25 @@ export default function SignAndLoginPage() {
                       </p>
                     )}
                     <div className="auth-forgot-row">
-                      <button type="button" className="auth-forgot-btn">
+                      <button
+                        type="button"
+                        className="auth-forgot-btn"
+                        onClick={() => {
+                          setAuthError('');
+                          setForgotPassword(true);
+                        }}
+                      >
                         Forgot Password?
                       </button>
                     </div>
                   </div>
-                  <button className="btn btn-primary auth-submit-btn">Login</button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary auth-submit-btn"
+                    disabled={authLoading}
+                  >
+                    {authLoading ? 'Logging in...' : 'Login'}
+                  </button>
                 </form>
 
                 <div className="auth-divider">
@@ -203,6 +508,7 @@ export default function SignAndLoginPage() {
                   <button
                     onClick={() => {
                       setAuthError('');
+                      setForgotPassword(false);
                       setMode('signup');
                     }}
                     className="auth-switch-btn"
@@ -221,6 +527,9 @@ export default function SignAndLoginPage() {
                   onSubmit={async (e) => {
                     e.preventDefault();
 
+                    setAuthError('');
+                    setAuthLoading(true);
+
                     try {
                       const data = await apiFetch('/auth/register', {
                         method: 'POST',
@@ -232,11 +541,15 @@ export default function SignAndLoginPage() {
                       });
                       localStorage.setItem('token', data.token);
                       setUser(data.user);
+
+                      await new Promise((resolve) => setTimeout(resolve, 500));
+
                       navigate('/');
-                      console.log('REGISTRATION SUCCESS:', data);
                     } catch (error) {
-                      console.error('REGISTRATION FAILED:', error);
+                      console.error(error);
                       setAuthError(error.message);
+                    } finally {
+                      setAuthLoading(false);
                     }
                   }}
                 >
@@ -295,7 +608,13 @@ export default function SignAndLoginPage() {
                       ))}
                     </div>
                   </div>
-                  <button className="btn btn-primary auth-submit-btn">Sign Up</button>
+                  <button
+                    type="submit"
+                    className="btn btn-primary auth-submit-btn"
+                    disabled={authLoading}
+                  >
+                    {authLoading ? 'Creating account...' : 'Sign Up'}
+                  </button>
                 </form>
 
                 <div className="auth-divider">
@@ -314,6 +633,7 @@ export default function SignAndLoginPage() {
                   <button
                     onClick={() => {
                       setAuthError('');
+                      setForgotPassword(false);
                       setMode('login');
                     }}
                     className="auth-switch-btn"

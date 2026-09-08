@@ -188,12 +188,13 @@
   position: relative;
 }
 
-.auth-input-wrap svg {
+.auth-input-wrap > svg {
   position: absolute;
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--color-text-faint);
+  pointer-events: none;
 }
 
 .auth-input {
@@ -226,13 +227,23 @@
 
 .auth-toggle-visibility {
   position: absolute;
-  right: 12px;
+  right: 4px;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: var(--color-text-faint);
   display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text-faint);
+}
+
+.auth-toggle-visibility:hover {
+  color: var(--color-text);
+  background: var(--color-hover-bg);
 }
 
 .auth-forgot-row {
