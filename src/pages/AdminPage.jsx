@@ -1,4 +1,23 @@
 import { useEffect, useState } from 'react';
+import {
+    LayoutDashboard,
+    Package,
+    ShoppingBag,
+    LayoutGrid,
+    ShoppingCart,
+    IndianRupee,
+    AlertTriangle,
+    Users,
+    XCircle,
+    CreditCard,
+    Plus,
+    Pencil,
+    Trash2,
+    Check,
+    X,
+    Calendar,
+    RefreshCw,
+} from 'lucide-react';
 import Layout from '../components/Layout';
 import { apiFetch } from '../api/api';
 import { useStore } from '../context/StoreContext';
@@ -18,6 +37,48 @@ const getPaymentProofUrl = (url) => {
     // Old local uploads
     return `${SERVER_URL}${url}`;
 };
+
+// Counts up from 0 to `value` whenever `value` changes — used on the
+// dashboard stat cards so numbers animate in instead of appearing static.
+function useCountUp(value, duration = 900) {
+    const [display, setDisplay] = useState(0);
+
+    useEffect(() => {
+        const target = typeof value === 'number' && !Number.isNaN(value) ? value : 0;
+
+        let frameId;
+        let startTime = null;
+
+        const step = (timestamp) => {
+            if (startTime === null) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+
+            setDisplay(Math.round(target * eased));
+
+            if (progress < 1) {
+                frameId = requestAnimationFrame(step);
+            }
+        };
+
+        frameId = requestAnimationFrame(step);
+
+        return () => cancelAnimationFrame(frameId);
+    }, [value, duration]);
+
+    return display;
+}
+
+function AnimatedStat({ value, prefix = '' }) {
+    const display = useCountUp(value);
+
+    return (
+        <strong>
+            {prefix}
+            {display.toLocaleString('en-IN')}
+        </strong>
+    );
+}
 export default function AdminPage() {
     const { categories } = useStore();
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -422,7 +483,8 @@ export default function AdminPage() {
                         className={`admin-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
                         onClick={() => setActiveTab('dashboard')}
                     >
-                        📊 Dashboard
+                        <LayoutDashboard size={16} />
+                        Dashboard
                     </button>
 
                     <button
@@ -430,7 +492,8 @@ export default function AdminPage() {
                         className={`admin-tab ${activeTab === 'orders' ? 'active' : ''}`}
                         onClick={() => setActiveTab('orders')}
                     >
-                        📦 Orders
+                        <Package size={16} />
+                        Orders
                     </button>
 
                     <button
@@ -438,7 +501,8 @@ export default function AdminPage() {
                         className={`admin-tab ${activeTab === 'products' ? 'active' : ''}`}
                         onClick={() => setActiveTab('products')}
                     >
-                        🛍️ Products
+                        <ShoppingBag size={16} />
+                        Products
                     </button>
 
                     <button
@@ -446,7 +510,8 @@ export default function AdminPage() {
                         className={`admin-tab ${activeTab === 'categories' ? 'active' : ''}`}
                         onClick={() => setActiveTab('categories')}
                     >
-                        🗂️ Categories
+                        <LayoutGrid size={16} />
+                        Categories
                     </button>
                 </nav>
 
@@ -463,39 +528,69 @@ export default function AdminPage() {
                             <div className="admin-state">
                                 <p>Unable to load dashboard statistics.</p>
                                 <button type="button" className="btn btn-outline" onClick={loadStats}>
-                                    Try Again
+                                    <RefreshCw size={13} /> Try Again
                                 </button>
                             </div>
                         ) : (
                             <div className="admin-stats">
                                 <div className="admin-stat-card">
-                                    <span>Total Orders</span>
-                                    <strong>{stats.totalOrders}</strong>
+                                    <div className="admin-stat-icon tone-red">
+                                        <ShoppingCart size={18} />
+                                    </div>
+                                    <div>
+                                        <span>Total Orders</span>
+                                        <AnimatedStat value={stats.totalOrders} />
+                                    </div>
                                 </div>
 
                                 <div className="admin-stat-card">
-                                    <span>Total Sales</span>
-                                    <strong>
-                                        ₹{stats.totalSales.toLocaleString('en-IN')}
-                                    </strong>
+                                    <div className="admin-stat-icon tone-green">
+                                        <IndianRupee size={18} />
+                                    </div>
+                                    <div>
+                                        <span>Total Sales</span>
+                                        <AnimatedStat value={stats.totalSales} prefix="₹" />
+                                    </div>
                                 </div>
 
                                 <div className="admin-stat-card">
-                                    <span>Total Products</span>
-                                    <strong>{stats.totalProducts}</strong>
+                                    <div className="admin-stat-icon tone-blue">
+                                        <Package size={18} />
+                                    </div>
+                                    <div>
+                                        <span>Total Products</span>
+                                        <AnimatedStat value={stats.totalProducts} />
+                                    </div>
                                 </div>
 
                                 <div className="admin-stat-card">
-                                    <span>Low Stock</span>
-                                    <strong>{stats.lowStockProducts}</strong>
+                                    <div className="admin-stat-icon tone-amber">
+                                        <AlertTriangle size={18} />
+                                    </div>
+                                    <div>
+                                        <span>Low Stock</span>
+                                        <AnimatedStat value={stats.lowStockProducts} />
+                                    </div>
                                 </div>
+
                                 <div className="admin-stat-card">
-                                    <span>Cancelled Orders</span>
-                                    <strong>{stats.cancelledOrders}</strong>
+                                    <div className="admin-stat-icon tone-red">
+                                        <XCircle size={18} />
+                                    </div>
+                                    <div>
+                                        <span>Cancelled Orders</span>
+                                        <AnimatedStat value={stats.cancelledOrders} />
+                                    </div>
                                 </div>
+
                                 <div className="admin-stat-card">
-                                    <span>Total Users</span>
-                                    <strong>{stats.totalUsers}</strong>
+                                    <div className="admin-stat-icon tone-blue">
+                                        <Users size={18} />
+                                    </div>
+                                    <div>
+                                        <span>Total Users</span>
+                                        <AnimatedStat value={stats.totalUsers} />
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -517,7 +612,7 @@ export default function AdminPage() {
                                     <div className="admin-state">
                                         <p>Unable to load orders.</p>
                                         <button type="button" className="btn btn-outline" onClick={loadOrders}>
-                                            Try Again
+                                            <RefreshCw size={13} /> Try Again
                                         </button>
                                     </div>
                                 ) : orders.length === 0 ? (
@@ -555,13 +650,18 @@ export default function AdminPage() {
                                                             rel="noopener noreferrer"
                                                             onClick={(e) => e.stopPropagation()}
                                                         >
-                                                            💳 View Proof
+                                                            <CreditCard size={13} />
+                                                            View Proof
                                                         </a>
                                                     ) : (
-                                                        <span>⚠️ No Proof</span>
+                                                        <span>
+                                                            <AlertTriangle size={13} />
+                                                            No Proof
+                                                        </span>
                                                     )}
                                                 </div>
                                                 <div className="admin-order-card-date">
+                                                    <Calendar size={13} />
                                                     <span>{formatDate(order.createdAt)}</span>
                                                 </div>
                                             </button>
@@ -596,7 +696,7 @@ export default function AdminPage() {
                                         }}
                                         aria-label="Close"
                                     >
-                                        ×
+                                        <X size={18} />
                                     </button>
 
                                     <div className="admin-card admin-order-details">
@@ -610,7 +710,7 @@ export default function AdminPage() {
                                                     className="btn btn-outline"
                                                     onClick={() => loadOrderDetails(selectedOrderId)}
                                                 >
-                                                    Try Again
+                                                    <RefreshCw size={13} /> Try Again
                                                 </button>
                                             </div>
                                         ) : selectedOrder ? (
@@ -744,14 +844,14 @@ export default function AdminPage() {
                                                                     className="btn btn-primary"
                                                                     onClick={updateShipping}
                                                                 >
-                                                                    Save Shipping
+                                                                    <Check size={14} /> Save Shipping
                                                                 </button>
                                                                 <button
                                                                     type="button"
                                                                     className="btn btn-outline"
                                                                     onClick={() => setEditingShipping(false)}
                                                                 >
-                                                                    Cancel
+                                                                    <X size={14} /> Cancel
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -784,7 +884,7 @@ export default function AdminPage() {
                                                                     setEditingShipping(true);
                                                                 }}
                                                             >
-                                                                Edit Shipping
+                                                                <Pencil size={13} /> Edit Shipping
                                                             </button>
                                                         </div>
                                                     )}
@@ -821,7 +921,7 @@ export default function AdminPage() {
                                 className="btn btn-primary admin-add-trigger"
                                 onClick={() => setAddingProduct(true)}
                             >
-                                + Add Product
+                                <Plus size={16} /> Add Product
                             </button>
                         </div>
 
@@ -837,7 +937,7 @@ export default function AdminPage() {
                                             className="btn btn-outline"
                                             onClick={loadProducts}
                                         >
-                                            Try Again
+                                            <RefreshCw size={13} /> Try Again
                                         </button>
                                     </div>
                                 ) : products.length === 0 ? (
@@ -878,7 +978,7 @@ export default function AdminPage() {
                                                             });
                                                         }}
                                                     >
-                                                        Edit
+                                                        <Pencil size={13} /> Edit
                                                     </button>
                                                     <button
                                                         type="button"
@@ -906,7 +1006,7 @@ export default function AdminPage() {
                                                             }
                                                         }}
                                                     >
-                                                        Delete
+                                                        <Trash2 size={13} /> Delete
                                                     </button>
                                                 </div>
                                             </div>
@@ -934,7 +1034,7 @@ export default function AdminPage() {
                                         }}
                                         aria-label="Close"
                                     >
-                                        ×
+                                        <X size={18} />
                                     </button>
 
                                     {addingProduct && (
@@ -1099,14 +1199,14 @@ export default function AdminPage() {
                                                         className="btn btn-primary"
                                                         onClick={createProduct}
                                                     >
-                                                        Save Product
+                                                        <Check size={14} /> Save Product
                                                     </button>
                                                     <button
                                                         type="button"
                                                         className="btn btn-outline"
                                                         onClick={() => setAddingProduct(false)}
                                                     >
-                                                        Cancel
+                                                        <X size={14} /> Cancel
                                                     </button>
                                                 </div>
                                             </div>
@@ -1192,14 +1292,14 @@ export default function AdminPage() {
                                                         className="btn btn-primary"
                                                         onClick={updateProduct}
                                                     >
-                                                        Save
+                                                        <Check size={14} /> Save
                                                     </button>
                                                     <button
                                                         type="button"
                                                         className="btn btn-outline"
                                                         onClick={() => setEditingProduct(null)}
                                                     >
-                                                        Cancel
+                                                        <X size={14} /> Cancel
                                                     </button>
                                                 </div>
                                             </div>
@@ -1221,7 +1321,7 @@ export default function AdminPage() {
                                 className="btn btn-primary admin-add-trigger"
                                 onClick={() => setAddingCategory(true)}
                             >
-                                + Add Category
+                                <Plus size={16} /> Add Category
                             </button>
                         </div>
 
@@ -1234,7 +1334,7 @@ export default function AdminPage() {
                                         <p>Unable to load categories.</p>
 
                                         <button type="button" className="btn btn-outline" onClick={loadCategories}>
-                                            Try Again
+                                            <RefreshCw size={13} /> Try Again
                                         </button>
                                     </div>
                                 ) : adminCategories.length === 0 ? (
@@ -1272,7 +1372,7 @@ export default function AdminPage() {
                                                             });
                                                         }}
                                                     >
-                                                        Edit
+                                                        <Pencil size={13} /> Edit
                                                     </button>
                                                     <button
                                                         type="button"
@@ -1300,7 +1400,7 @@ export default function AdminPage() {
                                                             }
                                                         }}
                                                     >
-                                                        Delete
+                                                        <Trash2 size={13} /> Delete
                                                     </button>
                                                 </div>
                                             </div>
@@ -1328,7 +1428,7 @@ export default function AdminPage() {
                                         }}
                                         aria-label="Close"
                                     >
-                                        ×
+                                        <X size={18} />
                                     </button>
 
                                     {addingCategory && (
@@ -1420,7 +1520,7 @@ export default function AdminPage() {
                                                         className="btn btn-primary"
                                                         onClick={createCategory}
                                                     >
-                                                        Save Category
+                                                        <Check size={14} /> Save Category
                                                     </button>
 
                                                     <button
@@ -1428,7 +1528,7 @@ export default function AdminPage() {
                                                         className="btn btn-outline"
                                                         onClick={() => setAddingCategory(false)}
                                                     >
-                                                        Cancel
+                                                        <X size={14} /> Cancel
                                                     </button>
                                                 </div>
                                             </div>
@@ -1514,7 +1614,7 @@ export default function AdminPage() {
                                                         className="btn btn-primary"
                                                         onClick={updateCategory}
                                                     >
-                                                        Save
+                                                        <Check size={14} /> Save
                                                     </button>
 
                                                     <button
@@ -1522,7 +1622,7 @@ export default function AdminPage() {
                                                         className="btn btn-outline"
                                                         onClick={() => setEditingCategory(null)}
                                                     >
-                                                        Cancel
+                                                        <X size={14} /> Cancel
                                                     </button>
                                                 </div>
                                             </div>

@@ -20,7 +20,9 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin: 12px 0 20px;
+  margin: 12px 0 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .admin-eyebrow {
@@ -33,15 +35,28 @@
 }
 
 .admin-title {
+  position: relative;
   margin: 0;
+  padding-left: 14px;
   font-size: 26px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
 
+.admin-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  border-radius: 4px;
+  background: var(--color-red);
+}
+
 .admin-subtitle {
-  margin: 4px 0 0;
+  margin: 4px 0 0 14px;
   font-size: 14px;
   color: var(--color-text-muted);
 }
@@ -69,16 +84,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 7px;
   border: none;
   border-radius: var(--radius-md);
   background: transparent;
-  padding: 10px 16px;
+  padding: 11px 16px;
   font-size: 13px;
   font-weight: 600;
   color: var(--color-text-muted);
   white-space: nowrap;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .admin-tab svg {
@@ -93,6 +108,7 @@
 .admin-tab.active {
   background: var(--color-red);
   color: #fff;
+  box-shadow: 0 4px 10px rgba(228, 52, 42, 0.28);
 }
 
 /* ============================================
@@ -113,11 +129,24 @@
 }
 
 .admin-section-title {
+  position: relative;
   margin: 0;
+  padding-left: 12px;
   font-size: 18px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+}
+
+.admin-section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  border-radius: 4px;
+  background: var(--color-red);
 }
 
 /* Generic loading / error / empty state */
@@ -178,15 +207,53 @@
 
 .admin-stat-card {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 14px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface-card);
   padding: 16px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-red);
+  box-shadow: var(--shadow-pop);
+}
+
+.admin-stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+}
+
+.admin-stat-icon.tone-red {
+  background: color-mix(in srgb, var(--color-red) 14%, transparent);
+  color: var(--color-red);
+}
+
+.admin-stat-icon.tone-green {
+  background: color-mix(in srgb, #16a34a 14%, transparent);
+  color: #16a34a;
+}
+
+.admin-stat-icon.tone-blue {
+  background: color-mix(in srgb, #2563eb 14%, transparent);
+  color: #2563eb;
+}
+
+.admin-stat-icon.tone-amber {
+  background: color-mix(in srgb, #d97706 14%, transparent);
+  color: #d97706;
 }
 
 .admin-stat-card span {
+  display: block;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
@@ -195,8 +262,11 @@
 }
 
 .admin-stat-card strong {
+  display: block;
+  margin-top: 4px;
   font-size: 22px;
   font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- Orders list ---------- */
@@ -219,11 +289,13 @@
   padding: 14px 16px;
   text-align: left;
   color: var(--color-text);
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .admin-order-card:hover {
   border-color: var(--color-red);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
 }
 
 .admin-order-card.active {
@@ -247,45 +319,31 @@
 }
 
 .admin-order-card-proof a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 12px;
   font-weight: 600;
   color: var(--color-red);
 }
 
 .admin-order-card-proof span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 12px;
   color: var(--color-text-faint);
 }
 
 .admin-order-card-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 12px;
   color: var(--color-text-muted);
 }
 
 /* ---------- Order details (modal) ---------- */
-.admin-order-details-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.admin-back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: none;
-  background: none;
-  padding: 0;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text-muted);
-}
-
-.admin-back-btn:hover {
-  color: var(--color-red);
-}
-
 .admin-order-details h3 {
   margin: 10px 0 4px;
   font-size: 16px;
@@ -442,6 +500,14 @@
   border-radius: var(--radius-lg);
   background: var(--color-surface-card);
   padding: 14px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-product-card:hover,
+.admin-category-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-red);
+  box-shadow: var(--shadow-card);
 }
 
 .admin-product-card strong,
@@ -582,9 +648,21 @@
 }
 
 .admin-modal .admin-card {
+  position: relative;
   box-shadow: var(--shadow-pop);
   max-height: calc(100vh - 120px);
   overflow-y: auto;
+}
+
+.admin-modal .admin-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: linear-gradient(90deg, var(--color-red), #ff8a65);
 }
 
 .admin-modal-close {
