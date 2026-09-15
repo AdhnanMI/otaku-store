@@ -234,6 +234,11 @@
   }
 }
 
+.search-results-grid.list-view {
+  grid-template-columns: 1fr;
+  max-width: 640px;
+}
+
 .search-no-results {
   display: flex;
   flex-direction: column;

@@ -1,32 +1,39 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { AlertCircle,ChevronLeft, ChevronRight, PlayCircle, ArrowRight, Flame, Shirt, Car, User, Gamepad2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PlayCircle, ShoppingBag, ArrowRight, Flame, Shirt, Car, User, Gamepad2 } from 'lucide-react';
 import Layout from '../components/Layout';
 import ProductCard from '../components/ProductCard';
+import ErrorState from '../components/ErrorState';
 import { useStore } from '../context/StoreContext';
 import './LandingPage.css';
 
 const SLIDES = [
   {
+    image: '/images/banner1.jpg',
+    accent: '#e4342a',
     eyebrow: 'Welcome to Otaku Store',
     title: 'Your Ultimate',
-    highlight: 'Anime & Collectibles',
-    tail: 'Destination',
-    copy: 'Anime T-Shirts, Hot Wheels, Anime Figures, RC Cars & Bikes – All in One Place!',
+    highlight: 'Anime & Collectibles Destination',
+    copy: 'T-shirts, figures, Hot Wheels, RC cars & bikes — all in one place.',
+    secondaryLabel: 'Explore Collection',
   },
   {
+    image: '/images/banner3.jpg',
+    accent: '#9d4edd',
     eyebrow: 'New Arrivals Weekly',
     title: 'Level Up',
     highlight: 'Your Collection',
-    tail: '',
-    copy: 'Fresh drops on figures, apparel and die-cast every week. Never miss a release.',
+    copy: 'Fresh drops on figures, apparel and die-cast every week.',
+    secondaryLabel: 'Browse New Arrivals',
   },
   {
+    image: '/images/banner2.jpg',
+    accent: '#f2a93c',
     eyebrow: 'Limited Time',
     title: 'Festive Sale',
     highlight: 'Up To 40% Off',
-    tail: '',
     copy: 'Grab your favourite characters and rides before the sale ends.',
+    secondaryLabel: 'View All Deals',
   },
 ];
 
@@ -178,19 +185,38 @@ export default function LandingPage() {
           >
             {SLIDES.map((s, i) => (
               <div className="hero-slide" style={{ width: `${100 / SLIDES.length}%` }} key={i}>
-                <div className="hero-grid">
-                  <div>
-                    <p className="hero-eyebrow">{s.eyebrow}</p>
-                    <h1 className="hero-title">
+                <div className="hero-slide-media">
+                  <img src={s.image} alt="" className="hero-slide-img" draggable={false} />
+                  <div className="hero-slide-scrim" />
+
+                  {/* Real text overlay: the banner art carries the copy on wide
+                      screens, but its baked-in text is unreadable once the
+                      image is cropped down for narrow viewports, so phones
+                      get their own live headline instead. */}
+                  <div className="hero-slide-copy">
+                    <p className="hero-slide-eyebrow" style={{ '--accent': s.accent }}>{s.eyebrow}</p>
+                    <h1 className="hero-slide-title">
                       {s.title}
                       <br />
-                      <span className="highlight">{s.highlight}</span> {s.tail}
+                      <span style={{ color: s.accent }}>{s.highlight}</span>
                     </h1>
-                    <p className="hero-copy">{s.copy}</p>
+                    <p className="hero-slide-desc">{s.copy}</p>
                   </div>
-                  <img src='./images/d1.png' className='hero-img' />
-                  <Link to="/products" className="btn btn-primary shop-btn">
-                    Shop Now
+                </div>
+
+                {/* Its own bar on wide screens, so it never collides with the
+                    banner art's baked-in copy; overlaid on the art on phones,
+                    where the art is cropped tight and there's no room to spare. */}
+                <div className="hero-cta-group">
+                  <Link
+                    to="/products"
+                    className="hero-cta-primary"
+                    style={{ '--accent': s.accent }}
+                  >
+                    <ShoppingBag size={15} /> Shop Now
+                  </Link>
+                  <Link to="/products" className="hero-cta-secondary">
+                    <PlayCircle size={15} /> {s.secondaryLabel}
                   </Link>
                 </div>
               </div>
@@ -283,18 +309,11 @@ export default function LandingPage() {
         {productsLoading ? (
           <TrendingSkeleton />
         ) : productsError ? (
-          <div className="landing-products-error">
-            <AlertCircle size={28} />
-
-            <p>Unable to load products.</p>
-
-            <button
-              type="button"
-              onClick={loadProducts}
-            >
-              Try Again
-            </button>
-          </div>
+          <ErrorState
+            title="Unable to load products"
+            message="We couldn't load trending picks right now. Please try again later."
+            onRetry={loadProducts}
+          />
         ) : (<div className="trending-grid">
           {trending.map((p) => (
             <ProductCard key={p.id} product={p} />
