@@ -7,6 +7,7 @@ import ProductThumb from '../components/ProductThumb';
 import StarRating from '../components/StarRating';
 import ConfirmDialog from '../components/ConfirmDialog';
 import CheckoutModal from '../components/CheckoutModal';
+import ErrorState from '../components/ErrorState';
 import { useStore } from '../context/StoreContext';
 import './CartPage.css';
 
@@ -142,21 +143,11 @@ export default function CartPage() {
         {authLoading || cartLoading ? (
           <CartSkeleton />
         ) : cartError ? (
-          <div className="cart-error card">
-            <h2>Unable to load cart</h2>
-            <p>
-              We couldn't load your cart right now.
-              Please try again later.
-            </p>
-
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={loadCart}
-            >
-              Try Again
-            </button>
-          </div>
+          <ErrorState
+            title="Unable to load cart"
+            message="We couldn't load your cart right now. Please try again later."
+            onRetry={loadCart}
+          />
         ) : isEmpty ? (
           <div className="cart-empty">
             <ShoppingCart size={40} />

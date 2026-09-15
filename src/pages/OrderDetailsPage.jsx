@@ -12,6 +12,7 @@ import {
 
 import Layout from '../components/Layout';
 import Breadcrumb from '../components/Breadcrumb';
+import ErrorState from '../components/ErrorState';
 import { apiFetch } from '../api/api';
 import './OrderDetailsPage.css';
 
@@ -206,21 +207,11 @@ export default function OrderDetailsPage() {
                         ]}
                     />
 
-                    <div className="order-details-error card">
-                        <h2>Unable to load order</h2>
-                        <p>
-                            We couldn't load this order right now.
-                            Please try again later.
-                        </p>
-
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={loadOrder}
-                        >
-                            Try Again
-                        </button>
-                    </div>
+                    <ErrorState
+                        title="Unable to load order"
+                        message="We couldn't load this order right now. Please try again later."
+                        onRetry={loadOrder}
+                    />
                 </div>
             </Layout>
         );

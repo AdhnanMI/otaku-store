@@ -1,19 +1,21 @@
 import { useState } from 'react';
-import * as Icons from 'lucide-react';
-import { AlertCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Shirt, Car, User, Gamepad2 } from 'lucide-react';
 import Layout from '../components/Layout';
 import Breadcrumb from '../components/Breadcrumb';
 import ProductCard from '../components/ProductCard';
+import ErrorState from '../components/ErrorState';
 import { useStore } from '../context/StoreContext';
 import './ProductsPage.css';
 
-// Category "icon" is a free-text lucide icon name typed into the Admin
-// panel, so it has to be resolved dynamically — a fixed map only covers
-// the categories that existed when this file was written and crashes
-// (undefined component) the moment an admin adds a new one.
-function resolveIcon(name) {
-  return Icons[name] || Icons.Package;
-}
+const ICONS = { Shirt, Car, User, Gamepad2 };
+
+const BLURBS = {
+  tshirts: { title: 'Wear Your Fandom', copy: 'High quality anime t-shirts for every fan!' },
+  hotwheels: { title: 'Collect Them All', copy: 'Premium die-cast cars from top brands!' },
+  figures: { title: 'Bring Characters To Life', copy: 'Detailed figures from your favorite anime!' },
+  rc: { title: 'Speed. Control. Thrill.', copy: 'High performance RC cars & bikes!' },
+};
 
 function CategoryRowSkeleton() {
   return (
@@ -55,11 +57,12 @@ function CategoryRow({ category, products }) {
   );
   const subs = ['All', ...new Set(categoryProducts.map((p) => p.sub).filter(Boolean))];
   const [activeSub, setActiveSub] = useState('All');
-  const Icon = resolveIcon(category.icon);
+  const Icon = ICONS[category.icon];
   const filtered =
     activeSub === 'All'
       ? categoryProducts
       : categoryProducts.filter((p) => p.sub === activeSub);
+  const blurb = BLURBS[category.id];
 
   return (
     <div className="card category-row">
@@ -70,9 +73,8 @@ function CategoryRow({ category, products }) {
           </span>
           <div>
             <p className="category-row-label">{category.label}</p>
-            <p className="category-row-blurb">
-              {category.tagline || `Explore our ${category.label.toLowerCase()} collection`}
-            </p>
+            <p className="category-row-blurb">{blurb.title}</p>
+            <p className="category-row-blurb">{blurb.copy}</p>
           </div>
         </div>
 
@@ -106,30 +108,13 @@ export default function ProductsPage() {
 
         <div className="category-rows">
           {productsLoading ? (
-            <>
-              {Array.from({ length: 3 }).map((_, i) => (
-                <CategoryRowSkeleton key={i} />
-              ))}
-            </>
+            <CategoryRowSkeleton />
           ) : productsError ? (
-            <div className="products-error">
-              <AlertCircle size={32} />
-
-              <h2>Unable to load products</h2>
-
-              <p>
-                We couldn't load the products right now.
-                Please try again later.
-              </p>
-
-              <button
-                type="button"
-                className="products-error-retry"
-                onClick={loadProducts}
-              >
-                Try Again
-              </button>
-            </div>
+            <ErrorState
+              title="Unable to load products"
+              message="We couldn't load the products right now. Please try again later."
+              onRetry={loadProducts}
+            />
           ) : (categories.map((cat) => (
             <CategoryRow key={cat.id} category={cat} products={products} />
           ))

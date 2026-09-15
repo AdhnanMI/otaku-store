@@ -3,6 +3,7 @@ import { Package, Eye, CalendarDays, IndianRupee } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Breadcrumb from '../components/Breadcrumb';
+import ErrorState from '../components/ErrorState';
 import { apiFetch } from '../api/api';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useStore } from '../context/StoreContext';
@@ -145,20 +146,11 @@ export default function OrdersPage() {
                         ]}
                     />
 
-                    <div className="orders-error card">
-                        <h2>Unable to load orders</h2>
-                        <p>
-                            We couldn't load your orders right now.
-                            Please try again later.
-                        </p>
-
-                        <button
-                            className="btn btn-primary"
-                            onClick={loadOrders}
-                        >
-                            Try Again
-                        </button>
-                    </div>
+                    <ErrorState
+                        title="Unable to load orders"
+                        message="We couldn't load your orders right now. Please try again later."
+                        onRetry={loadOrders}
+                    />
                 </div>
             </Layout>
         );

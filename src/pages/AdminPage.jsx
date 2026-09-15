@@ -16,9 +16,9 @@ import {
     Check,
     X,
     Calendar,
-    RefreshCw,
 } from 'lucide-react';
 import Layout from '../components/Layout';
+import ErrorState from '../components/ErrorState';
 import { apiFetch } from '../api/api';
 import { useStore } from '../context/StoreContext';
 import './AdminPage.css';
@@ -525,12 +525,12 @@ export default function AdminPage() {
                         {statsLoading ? (
                             <div className="admin-state">Loading dashboard...</div>
                         ) : statsError ? (
-                            <div className="admin-state">
-                                <p>Unable to load dashboard statistics.</p>
-                                <button type="button" className="btn btn-outline" onClick={loadStats}>
-                                    <RefreshCw size={13} /> Try Again
-                                </button>
-                            </div>
+                            <ErrorState
+                                compact
+                                title="Unable to load dashboard statistics"
+                                message=""
+                                onRetry={loadStats}
+                            />
                         ) : (
                             <div className="admin-stats">
                                 <div className="admin-stat-card">
@@ -609,12 +609,12 @@ export default function AdminPage() {
                                 {ordersLoading ? (
                                     <div className="admin-state">Loading orders...</div>
                                 ) : ordersError ? (
-                                    <div className="admin-state">
-                                        <p>Unable to load orders.</p>
-                                        <button type="button" className="btn btn-outline" onClick={loadOrders}>
-                                            <RefreshCw size={13} /> Try Again
-                                        </button>
-                                    </div>
+                                    <ErrorState
+                                        compact
+                                        title="Unable to load orders"
+                                        message=""
+                                        onRetry={loadOrders}
+                                    />
                                 ) : orders.length === 0 ? (
                                     <div className="admin-state">No orders have been placed yet.</div>
                                 ) : (
@@ -703,16 +703,12 @@ export default function AdminPage() {
                                         {orderDetailsLoading ? (
                                             <div className="admin-state">Loading order details...</div>
                                         ) : orderDetailsError ? (
-                                            <div className="admin-state">
-                                                <p>Unable to load order details.</p>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-outline"
-                                                    onClick={() => loadOrderDetails(selectedOrderId)}
-                                                >
-                                                    <RefreshCw size={13} /> Try Again
-                                                </button>
-                                            </div>
+                                            <ErrorState
+                                                compact
+                                                title="Unable to load order details"
+                                                message=""
+                                                onRetry={() => loadOrderDetails(selectedOrderId)}
+                                            />
                                         ) : selectedOrder ? (
                                             <div>
                                                 <h3>Order {selectedOrder.orderNumber}</h3>
@@ -930,16 +926,12 @@ export default function AdminPage() {
                                 {productsLoading ? (
                                     <div className="admin-state">Loading products...</div>
                                 ) : productsError ? (
-                                    <div className="admin-state">
-                                        <p>Unable to load products.</p>
-                                        <button
-                                            type="button"
-                                            className="btn btn-outline"
-                                            onClick={loadProducts}
-                                        >
-                                            <RefreshCw size={13} /> Try Again
-                                        </button>
-                                    </div>
+                                    <ErrorState
+                                        compact
+                                        title="Unable to load products"
+                                        message=""
+                                        onRetry={loadProducts}
+                                    />
                                 ) : products.length === 0 ? (
                                     <div className="admin-state">No products found.</div>
                                 ) : (
@@ -1330,13 +1322,12 @@ export default function AdminPage() {
                                 {categoriesLoading ? (
                                     <div className="admin-state">Loading categories...</div>
                                 ) : categoriesError ? (
-                                    <div className="admin-state">
-                                        <p>Unable to load categories.</p>
-
-                                        <button type="button" className="btn btn-outline" onClick={loadCategories}>
-                                            <RefreshCw size={13} /> Try Again
-                                        </button>
-                                    </div>
+                                    <ErrorState
+                                        compact
+                                        title="Unable to load categories"
+                                        message=""
+                                        onRetry={loadCategories}
+                                    />
                                 ) : adminCategories.length === 0 ? (
                                     <div className="admin-state">No categories found.</div>
                                 ) : (

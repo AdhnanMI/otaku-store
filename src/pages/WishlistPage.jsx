@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import Breadcrumb from '../components/Breadcrumb';
 import ProductThumb from '../components/ProductThumb';
 import StarRating from '../components/StarRating';
+import ErrorState from '../components/ErrorState';
 import { useStore } from '../context/StoreContext';
 import './WishlistPage.css';
 
@@ -96,21 +97,11 @@ export default function WishlistPage() {
         {authLoading || wishlistLoading ? (
           <WishlistSkeleton />
         ) : wishlistError ? (
-          <div className="wishlist-error card">
-            <h2>Unable to load wishlist</h2>
-            <p>
-              We couldn't load your wishlist right now.
-              Please try again later.
-            </p>
-
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={loadWishlist}
-            >
-              Try Again
-            </button>
-          </div>
+          <ErrorState
+            title="Unable to load wishlist"
+            message="We couldn't load your wishlist right now. Please try again later."
+            onRetry={loadWishlist}
+          />
         ) : (<div className="wishlist-layout">
           <aside className="wishlist-sidebar">
             <div className="card wishlist-cat-card">
