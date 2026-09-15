@@ -9,7 +9,9 @@ import './LandingPage.css';
 
 const SLIDES = [
   {
-    image: '/images/banner1.jpg',
+    desktopImage: '/images/banner1-desktop.jpg',
+    tabletImage: '/images/banner1-tablet.jpg',
+    mobileImage: '/images/banner1-mobile.jpg',
     accent: '#e4342a',
     eyebrow: 'Welcome to Otaku Store',
     title: 'Your Ultimate',
@@ -18,7 +20,9 @@ const SLIDES = [
     secondaryLabel: 'Explore Collection',
   },
   {
-    image: '/images/banner3.jpg',
+    desktopImage: '/images/banner3-desktop.jpg',
+    tabletImage: '/images/banner3-tablet.jpg',
+    mobileImage: '/images/banner3-mobile.jpg',
     accent: '#9d4edd',
     eyebrow: 'New Arrivals Weekly',
     title: 'Level Up',
@@ -27,7 +31,9 @@ const SLIDES = [
     secondaryLabel: 'Browse New Arrivals',
   },
   {
-    image: '/images/banner2.jpg',
+    desktopImage: '/images/banner2-desktop.jpg',
+    tabletImage: '/images/banner2-tablet.jpg',
+    mobileImage: '/images/banner2-mobile.jpg',
     accent: '#f2a93c',
     eyebrow: 'Limited Time',
     title: 'Festive Sale',
@@ -186,7 +192,29 @@ export default function LandingPage() {
             {SLIDES.map((s, i) => (
               <div className="hero-slide" style={{ width: `${100 / SLIDES.length}%` }} key={i}>
                 <div className="hero-slide-media">
-                  <img src={s.image} alt="" className="hero-slide-img" draggable={false} />
+                  <picture>
+                    <source
+                      media="(max-width: 639px)"
+                      srcSet={s.mobileImage}
+                    />
+
+                    <source
+                      media="(min-width: 640px) and (max-width: 767px)"
+                      srcSet={s.tabletImage}
+                    />
+
+                    <source
+                      media="(min-width: 768px)"
+                      srcSet={s.desktopImage}
+                    />
+
+                    <img
+                      src={s.desktopImage}
+                      alt=""
+                      className="hero-slide-img"
+                      draggable={false}
+                    />
+                  </picture>
                   <div className="hero-slide-scrim" />
 
                   {/* Real text overlay: the banner art carries the copy on wide
