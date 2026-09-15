@@ -349,7 +349,6 @@ router.put(
 
       res.json({ product });
 
-      res.json({ product });
     } catch (error) {
       if (error.code === 'P2025') {
         return res.status(404).json({

@@ -25,6 +25,7 @@ export function StoreProvider({ children }) {
   const [orderId, setOrderId] = useState(null);
   const [orderDbId, setOrderDbId] = useState(null);
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [wishlistError, setWishlistError] = useState(null);
@@ -138,24 +139,22 @@ export function StoreProvider({ children }) {
       setProductsLoading(false);
     }
   };
-
+  const loadCategories = async () => {
+    try {
+      const data = await apiFetch('/categories');
+      setCategories(data.categories || []);
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+    }
+  };
   useEffect(() => {
     loadProducts();
+    loadCategories();
   }, []);
 
   const openQuickView = (product) => setQuickViewProduct(product);
   const closeQuickView = () => setQuickViewProduct(null);
-  const categories = useMemo(() => {
-    const uniqueCategories = new Map();
 
-    products.forEach((product) => {
-      if (product.categoryRef) {
-        uniqueCategories.set(product.categoryRef.id, product.categoryRef);
-      }
-    });
-
-    return Array.from(uniqueCategories.values());
-  }, [products]);
   const findProduct = (id) =>
     products.find((p) => p.id === id);
   const syncCart = (cartItems) => {

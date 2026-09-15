@@ -108,15 +108,16 @@ export default function AdminPage() {
         icon: '',
         hue: '',
         tagline: '',
-        image: '',
+        image: null,
     });
+
     const [newCategoryForm, setNewCategoryForm] = useState({
         id: '',
         label: '',
         icon: 'Package',
         hue: '',
         tagline: '',
-        image: '',
+        image: null,
     });
     const [productForm, setProductForm] = useState({
         name: '',
@@ -140,70 +141,64 @@ export default function AdminPage() {
     });
 
     const updateCategory = async () => {
-        if (!editingCategory) return;
-
-        if (!categoryForm.label.trim()) {
-            alert('Category label is required.');
-            return;
-        }
-
         try {
-            const data = await apiFetch(
-                `/categories/${editingCategory.id}`,
-                {
-                    method: 'PUT',
-                    body: JSON.stringify({
-                        label: categoryForm.label.trim(),
-                        icon: categoryForm.icon.trim(),
-                        hue: categoryForm.hue.trim(),
-                        tagline: categoryForm.tagline.trim() || null,
-                        image: categoryForm.image.trim() || null,
-                    }),
-                }
-            );
+            const formData = new FormData();
 
-            setAdminCategories((current) =>
-                current.map((category) =>
-                    category.id === data.category.id
-                        ? data.category
-                        : category
+            formData.append('label', categoryForm.label);
+            formData.append('icon', categoryForm.icon);
+            formData.append('hue', categoryForm.hue);
+            formData.append('tagline', categoryForm.tagline);
+
+            if (categoryForm.image) {
+                formData.append('image', categoryForm.image);
+            }
+
+            const data = await apiFetch(`/categories/${editingCategory.id}`, {
+                method: 'PUT',
+                body: formData,
+            });
+
+            setCategories((prev) =>
+                prev.map((category) =>
+                    category.id === editingCategory.id ? data.category : category
                 )
             );
 
             setEditingCategory(null);
+
+            setCategoryForm({
+                label: '',
+                icon: '',
+                hue: '',
+                tagline: '',
+                image: null,
+            });
+
+            alert('Category updated successfully.');
         } catch (error) {
-            console.error('Failed to update category:', error);
             alert(error.message || 'Failed to update category.');
         }
     };
     const createCategory = async () => {
-        if (
-            !newCategoryForm.id.trim() ||
-            !newCategoryForm.label.trim()
-        ) {
-            alert('Category ID and label are required.');
-            return;
-        }
-
         try {
+            const formData = new FormData();
+
+            formData.append('id', newCategoryForm.id);
+            formData.append('label', newCategoryForm.label);
+            formData.append('icon', newCategoryForm.icon);
+            formData.append('hue', newCategoryForm.hue);
+            formData.append('tagline', newCategoryForm.tagline);
+
+            if (newCategoryForm.image) {
+                formData.append('image', newCategoryForm.image);
+            }
+
             const data = await apiFetch('/categories', {
                 method: 'POST',
-                body: JSON.stringify({
-                    id: newCategoryForm.id.trim(),
-                    label: newCategoryForm.label.trim(),
-                    icon: newCategoryForm.icon.trim(),
-                    hue: newCategoryForm.hue.trim(),
-                    tagline: newCategoryForm.tagline.trim() || null,
-                    image: newCategoryForm.image.trim() || null,
-                }),
+                body: formData,
             });
 
-            setAdminCategories((current) => [
-                ...current,
-                data.category,
-            ]);
-
-            setAddingCategory(false);
+            setCategories((prev) => [...prev, data.category]);
 
             setNewCategoryForm({
                 id: '',
@@ -211,10 +206,11 @@ export default function AdminPage() {
                 icon: 'Package',
                 hue: '',
                 tagline: '',
-                image: '',
+                image: null,
             });
+
+            alert('Category created successfully.');
         } catch (error) {
-            console.error('Failed to create category:', error);
             alert(error.message || 'Failed to create category.');
         }
     };
@@ -1493,14 +1489,13 @@ export default function AdminPage() {
                                                 />
 
                                                 <input
-                                                    type="text"
+                                                    type="file"
                                                     className="admin-input"
-                                                    placeholder="Image URL"
-                                                    value={newCategoryForm.image}
+                                                    accept="image/*"
                                                     onChange={(e) =>
                                                         setNewCategoryForm({
                                                             ...newCategoryForm,
-                                                            image: e.target.value,
+                                                            image: e.target.files[0] || null,
                                                         })
                                                     }
                                                 />
@@ -1587,14 +1582,13 @@ export default function AdminPage() {
                                                 />
 
                                                 <input
-                                                    type="text"
+                                                    type="file"
                                                     className="admin-input"
-                                                    placeholder="Image URL"
-                                                    value={categoryForm.image}
+                                                    accept="image/*"
                                                     onChange={(e) =>
                                                         setCategoryForm({
                                                             ...categoryForm,
-                                                            image: e.target.value,
+                                                            image: e.target.files[0] || null,
                                                         })
                                                     }
                                                 />

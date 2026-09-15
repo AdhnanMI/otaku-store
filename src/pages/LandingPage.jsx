@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, PlayCircle, ShoppingBag, ArrowRight, Flame, Shirt, Car, User, Gamepad2 } from 'lucide-react';
 import Layout from '../components/Layout';
+import { ChevronLeft, ChevronRight, PlayCircle, ShoppingBag, ArrowRight, Flame, Shirt, Car, User, Gamepad2, Package } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import ErrorState from '../components/ErrorState';
 import { useStore } from '../context/StoreContext';
@@ -283,7 +283,7 @@ export default function LandingPage() {
             ))
           ) : (
             categories.map((cat) => {
-              const Icon = ICONS[cat.icon];
+              const Icon = ICONS[cat.icon] || Package;
 
               return (
                 <a
