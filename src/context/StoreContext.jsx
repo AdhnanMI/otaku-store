@@ -27,6 +27,8 @@ export function StoreProvider({ children }) {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [user, setUser] = useState(null);
+  const [addresses, setAddresses] = useState([]);
+  const [addressesLoading, setAddressesLoading] = useState(true);
   const [authLoading, setAuthLoading] = useState(true);
   const [wishlistError, setWishlistError] = useState(null);
 
@@ -42,7 +44,27 @@ export function StoreProvider({ children }) {
     const loadUser = async () => {
       try {
         const data = await apiFetch('/auth/me');
+
         setUser(data.user);
+
+        if (
+          data.user.addressLine1 &&
+          data.user.city &&
+          data.user.state &&
+          data.user.pincode &&
+          data.user.phone
+        ) {
+          setShippingInfo({
+            fullName: data.user.name || '',
+            phone: data.user.phone || '',
+            email: data.user.email || '',
+            addressLine1: data.user.addressLine1 || '',
+            addressLine2: data.user.addressLine2 || '',
+            city: data.user.city || '',
+            state: data.user.state || '',
+            pincode: data.user.pincode || '',
+          });
+        }
       } catch (error) {
         if (error.status === 401) {
           setUser(null);
@@ -56,6 +78,49 @@ export function StoreProvider({ children }) {
 
     loadUser();
   }, []);
+
+  const addAddress = async (addressData) => {
+    try {
+      const data = await apiFetch('/auth/addresses', {
+        method: 'POST',
+        body: JSON.stringify(addressData),
+      });
+
+      setAddresses((current) => [...current, data.address]);
+
+      return data.address;
+    } catch (error) {
+      console.error('Failed to add address:', error);
+      throw error;
+    }
+  };
+
+  const loadAddresses = async () => {
+    if (!user) {
+      setAddresses([]);
+      setAddressesLoading(false);
+      return;
+    }
+
+    setAddressesLoading(true);
+
+    try {
+      const data = await apiFetch('/auth/addresses');
+      setAddresses(data.addresses || []);
+    } catch (error) {
+      if (error.status === 401) {
+        setUser(null);
+      }
+
+      console.error('Failed to load addresses:', error);
+    } finally {
+      setAddressesLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadAddresses();
+  }, [user]);
   const loadCart = async () => {
     if (!user) return;
 
@@ -339,7 +404,30 @@ export function StoreProvider({ children }) {
 
   const removeCoupon = () => setAppliedCoupon(null);
 
-  const saveShippingInfo = (info) => setShippingInfo(info);
+  const saveShippingInfo = async (info) => {
+    setShippingInfo(info);
+
+    try {
+      const data = await apiFetch('/auth/address', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          addressLine1: info.addressLine1,
+          addressLine2: info.addressLine2,
+          city: info.city,
+          state: info.state,
+          pincode: info.pincode,
+          phone: info.phone,
+        }),
+      });
+
+      setUser(data.user);
+
+      return data.user;
+    } catch (error) {
+      console.error('Failed to save address:', error);
+      throw error;
+    }
+  };
 
   const placeOrder = async (info) => {
     setShippingInfo(info);
@@ -431,6 +519,10 @@ export function StoreProvider({ children }) {
     wishlistError,
     loadWishlist,
     loadCart,
+    addresses,
+    addressesLoading,
+    loadAddresses,
+    addAddress,
   };
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

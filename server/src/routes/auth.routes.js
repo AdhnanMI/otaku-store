@@ -27,6 +27,12 @@ function publicUser(user) {
     name: user.name,
     email: user.email,
     role: user.role,
+    addressLine1: user.addressLine1,
+    addressLine2: user.addressLine2,
+    city: user.city,
+    state: user.state,
+    pincode: user.pincode,
+    phone: user.phone,
   };
 }
 
@@ -289,5 +295,156 @@ router.get('/me', requireAuth, async (req, res) => {
   if (!user) return res.status(404).json({ error: 'User not found.' });
   res.json({ user: publicUser(user) });
 });
+router.patch('/address', requireAuth, async (req, res) => {
+  const {
+    addressLine1,
+    addressLine2,
+    city,
+    state,
+    pincode,
+    phone,
+  } = req.body || {};
 
+  if (
+    !addressLine1?.trim() ||
+    !city?.trim() ||
+    !state?.trim() ||
+    !pincode?.trim() ||
+    !phone?.trim()
+  ) {
+    return res.status(400).json({
+      error: 'Address and phone are required.',
+    });
+  }
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: req.user.id,
+      },
+      data: {
+        addressLine1: addressLine1.trim(),
+        addressLine2: addressLine2?.trim() || null,
+        city: city.trim(),
+        state: state.trim(),
+        pincode: pincode.trim(),
+        phone: phone.trim(),
+      },
+    });
+
+    res.json({
+      user: publicUser(updatedUser),
+    });
+  } catch (error) {
+    console.error('Failed to save address:', error);
+
+    res.status(500).json({
+      error: 'Failed to save address.',
+    });
+  }
+});
+router.get('/addresses', requireAuth, async (req, res) => {
+  try {
+    let addresses = await prisma.address.findMany({
+      where: {
+        userId: req.user.id,
+      },
+      orderBy: {
+        createdAt: 'asc',
+      },
+    });
+
+    if (addresses.length === 0) {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: req.user.id,
+        },
+      });
+
+      if (
+        user?.addressLine1 &&
+        user?.city &&
+        user?.state &&
+        user?.pincode &&
+        user?.phone
+      ) {
+        const address = await prisma.address.create({
+          data: {
+            userId: user.id,
+            label: 'Home',
+            fullName: user.name,
+            phone: user.phone,
+            addressLine1: user.addressLine1,
+            addressLine2: user.addressLine2,
+            city: user.city,
+            state: user.state,
+            pincode: user.pincode,
+          },
+        });
+
+        addresses = [address];
+      }
+    }
+
+    res.json({ addresses });
+  } catch (error) {
+    console.error('Failed to load addresses:', error);
+
+    res.status(500).json({
+      error: 'Failed to load addresses.',
+    });
+  }
+});
+router.post('/addresses', requireAuth, async (req, res) => {
+  const {
+    label,
+    fullName,
+    phone,
+    addressLine1,
+    addressLine2,
+    city,
+    state,
+    pincode,
+  } = req.body || {};
+
+  if (
+    !label?.trim() ||
+    !fullName?.trim() ||
+    !phone?.trim() ||
+    !addressLine1?.trim() ||
+    !city?.trim() ||
+    !state?.trim() ||
+    !pincode?.trim()
+  ) {
+    return res.status(400).json({
+      error: 'All required address fields must be provided.',
+    });
+  }
+
+  try {
+    const address = await prisma.address.create({
+      data: {
+        userId: req.user.id,
+        label: label.trim(),
+        fullName: fullName.trim(),
+        phone: phone.trim(),
+        addressLine1: addressLine1.trim(),
+        addressLine2: addressLine2?.trim() || null,
+        city: city.trim(),
+        state: state.trim(),
+        pincode: pincode.trim(),
+      },
+    });
+
+    res.status(201).json({
+      address,
+    });
+  } catch (error) {
+    console.error('Failed to create address:', error);
+
+    res.status(500).json({
+      error: 'Failed to save address.',
+    });
+  }
+});
 export default router;
