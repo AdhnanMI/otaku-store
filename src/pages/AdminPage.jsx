@@ -377,10 +377,27 @@ export default function AdminPage() {
     const updateOrderStatus = async (status) => {
         if (!selectedOrder) return;
 
+        let cancellationReason = null;
+
+        if (status === 'CANCELLED') {
+            const reason = window.prompt(
+                'Enter the reason for cancelling this order:'
+            );
+
+            if (!reason || !reason.trim()) {
+                return;
+            }
+
+            cancellationReason = reason.trim();
+        }
+
         try {
             const data = await apiFetch(`/admin/orders/${selectedOrder.id}`, {
                 method: 'PATCH',
-                body: JSON.stringify({ status }),
+                body: JSON.stringify({
+                    status,
+                    cancellationReason,
+                }),
             });
 
             setSelectedOrder(data.order);

@@ -62,7 +62,15 @@ router.get('/orders/:id', requireAuth, requireAdmin, async (req, res) => {
         error: 'Order not found.',
       });
     }
-
+    // if (
+    //   status === 'CANCELLED' &&
+    //   order.status !== 'CANCELLED' &&
+    //   !cancellationReason?.trim()
+    // ) {
+    //   return res.status(400).json({
+    //     error: 'Cancellation reason is required.',
+    //   });
+    // }
     res.json({ order });
   } catch (error) {
     console.error('Failed to load admin order:', error);
@@ -83,6 +91,7 @@ router.get('/orders/:id', requireAuth, requireAdmin, async (req, res) => {
 router.patch('/orders/:id', requireAuth, requireAdmin, async (req, res) => {
   const {
     status,
+    cancellationReason,
     fullName,
     phone,
     email,
@@ -125,7 +134,15 @@ router.patch('/orders/:id', requireAuth, requireAdmin, async (req, res) => {
         error: 'Order not found.',
       });
     }
-
+    if (
+      status === 'CANCELLED' &&
+      order.status !== 'CANCELLED' &&
+      !cancellationReason?.trim()
+    ) {
+      return res.status(400).json({
+        error: 'Cancellation reason is required.',
+      });
+    }
     let updated;
 
     // ==================================================
@@ -161,6 +178,7 @@ router.patch('/orders/:id', requireAuth, requireAdmin, async (req, res) => {
           },
           data: {
             status: 'CANCELLED',
+            cancellationReason: cancellationReason.trim(),
 
             ...(fullName !== undefined && {
               fullName: fullName.trim(),

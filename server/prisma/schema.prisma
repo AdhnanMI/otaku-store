@@ -53,6 +53,7 @@ model Order {
   orderNumber     String      @unique
   userId          String?
   status          OrderStatus @default(PLACED)
+  cancellationReason String?
   subtotal        Int
   discount        Int
   delivery        Int

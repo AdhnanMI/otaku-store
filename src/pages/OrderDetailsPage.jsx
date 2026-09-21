@@ -341,10 +341,23 @@ export default function OrderDetailsPage() {
                                     <span className="order-details-info-label">
                                         Status
                                     </span>
+
                                     <p className="order-details-info-value">
                                         {order.status}
                                     </p>
                                 </div>
+
+                                {order.status === 'CANCELLED' && order.cancellationReason && (
+                                    <div className="order-details-info-item">
+                                        <span className="order-details-info-label">
+                                            Reason for Cancellation
+                                        </span>
+
+                                        <p className="order-details-info-value">
+                                            {order.cancellationReason}
+                                        </p>
+                                    </div>
+                                )}
 
                             </div>
                         </div>

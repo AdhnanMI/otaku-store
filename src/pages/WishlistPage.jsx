@@ -73,6 +73,28 @@ export default function WishlistPage() {
     wishlistItems.forEach((p) => addToCart(p.id, 1));
   };
 
+  // The button was previously inert — no handler at all. Uses the native
+  // share sheet where available and falls back to copying the link.
+  const [shareNote, setShareNote] = useState('');
+
+  const shareWishlist = async () => {
+    const url = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'My Otaku Store Wishlist', url });
+        return;
+      }
+
+      await navigator.clipboard.writeText(url);
+      setShareNote('Link copied');
+    } catch {
+      setShareNote('Could not share');
+    }
+
+    setTimeout(() => setShareNote(''), 2000);
+  };
+
   return (
     <Layout>
       <div className="page-container">
@@ -83,11 +105,13 @@ export default function WishlistPage() {
               <Heart size={20} style={{ fill: 'var(--color-red)', color: 'var(--color-red)' }} />
               <h1 className="wishlist-title">My Wishlist</h1>
             </div>
-            <p className="wishlist-subtitle">You have {wishlistItems.length} items in your wishlist</p>
+            <p className="wishlist-subtitle">
+              You have {wishlistItems.length} item{wishlistItems.length === 1 ? '' : 's'} in your wishlist
+            </p>
           </div>
           <div className="wishlist-header-actions">
-            <button className="btn btn-outline">
-              <Share2 size={14} /> Share Wishlist
+            <button className="btn btn-outline" onClick={shareWishlist}>
+              <Share2 size={14} /> {shareNote || 'Share Wishlist'}
             </button>
             <button onClick={moveAllToCart} disabled={wishlistItems.length === 0} className="btn btn-primary">
               <ShoppingCart size={14} /> Move All to Cart
@@ -136,15 +160,21 @@ export default function WishlistPage() {
               </div>
             ) : (
               <div className="wishlist-grid">
-                {filtered.map((product) => (
-                  <div key={product.id} className="wishlist-card">
+                {filtered.map((product, i) => (
+                  <div key={product.id} className="wishlist-card" style={{ '--card-index': i }}>
                     <button onClick={() => toggleWishlist(product.id)} className="wishlist-card-heart" aria-label="Remove from wishlist">
                       <Heart size={14} />
                     </button>
                     <span className="wishlist-card-tag">
                       {categories.find((c) => c.id === product.category)?.label || product.category}
                     </span>
-                    <ProductThumb icon={product.icon} hue={product.hue} />
+                    <div className="wishlist-card-thumb">
+                      {product.image ? (
+                        <img src={product.image} alt={product.name} loading="lazy" />
+                      ) : (
+                        <ProductThumb icon={product.icon} hue={product.hue} />
+                      )}
+                    </div>
                     <p className="wishlist-card-name">{product.name}</p>
                     <p className="wishlist-card-price">₹{product.price.toLocaleString('en-IN')}</p>
                     <StarRating rating={product.rating} reviews={product.reviews} />

@@ -51,7 +51,7 @@ function CategoryRowSkeleton() {
     </div>
   );
 }
-function CategoryRow({ category, products }) {
+function CategoryRow({ category, products, index = 0 }) {
   const categoryProducts = products.filter(
     (p) => p.category === category.id
   );
@@ -65,28 +65,60 @@ function CategoryRow({ category, products }) {
   const blurb = BLURBS[category.id];
 
   return (
-    <div className="card category-row">
+    <div
+      className="card category-row"
+      /* Rows fade in one after another on load rather than all at once,
+         so the eye is led down the page instead of hit with everything. */
+      style={{ '--row-index': index }}
+    >
       <div className="category-row-inner">
         <div className="category-row-info">
           <span className={`category-row-icon ${category.hue}`}>
-            <Icon size={20} />
+            <Icon size={22} />
           </span>
-          <div>
+          <div className="category-row-info-text">
             <p className="category-row-label">{category.label}</p>
-            <p className="category-row-blurb">{blurb.title}</p>
+            <p className="category-row-tagline">{blurb.title}</p>
             <p className="category-row-blurb">{blurb.copy}</p>
+
+            <span className="category-row-count">
+              {categoryProducts.length} item{categoryProducts.length === 1 ? '' : 's'}
+            </span>
+
+            <Link
+              to={`/search?q=${encodeURIComponent(category.label)}`}
+              className="category-row-viewall"
+            >
+              View all <ArrowRight size={13} />
+            </Link>
           </div>
         </div>
 
         <div className="category-row-content">
-          <div className="category-row-tabs">
+          <div className="category-row-tabs" role="tablist">
             {subs.map((s) => (
-              <button key={s} onClick={() => setActiveSub(s)} className={`category-row-tab ${activeSub === s ? 'active' : ''}`}>
+              <button
+                key={s}
+                type="button"
+                role="tab"
+                aria-selected={activeSub === s}
+                onClick={() => setActiveSub(s)}
+                className={`category-row-tab ${activeSub === s ? 'active' : ''}`}
+              >
                 {s}
               </button>
             ))}
           </div>
-          <div className="category-row-products"> {filtered.slice(0, 6).map((p) => (<ProductCard key={p.id} product={p} />))} </div>
+
+          {filtered.length === 0 ? (
+            <p className="category-row-empty">Nothing here yet — try another filter.</p>
+          ) : (
+            <div className="category-row-products" key={activeSub}>
+              {filtered.slice(0, 6).map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -115,8 +147,8 @@ export default function ProductsPage() {
               message="We couldn't load the products right now. Please try again later."
               onRetry={loadProducts}
             />
-          ) : (categories.map((cat) => (
-            <CategoryRow key={cat.id} category={cat} products={products} />
+          ) : (categories.map((cat, i) => (
+            <CategoryRow key={cat.id} category={cat} products={products} index={i} />
           ))
           )}
         </div>

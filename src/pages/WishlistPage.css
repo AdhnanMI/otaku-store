@@ -169,6 +169,46 @@
   background: var(--color-surface-card);
   border-radius: var(--radius-lg);
   padding: 12px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  /* Cards arrive in sequence rather than all at once. */
+  animation: wishlist-card-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(min(var(--card-index, 0), 7) * 45ms);
+}
+
+.wishlist-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+@keyframes wishlist-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Real product photography, matching the product grid. These cards used
+   to render the generic icon placeholder as a large colour block, which
+   told the shopper nothing about the item they'd saved. */
+.wishlist-card-thumb img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  display: block;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  background: var(--color-hover-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wishlist-card {
+    animation: none;
+    transition: none;
+  }
 }
 
 .wishlist-card-heart {
@@ -219,6 +259,11 @@
   line-height: 1.35;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+  /* The clamp count was missing, so long names were never actually
+     truncated and cards in a row drifted out of alignment. */
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  min-height: 2.7em;
   overflow: hidden;
 }
 

@@ -104,6 +104,7 @@ export default function CartPage() {
     categories,
     cartError,
     loadCart,
+    cartCount,
     user,
   } = useStore();
   const isEmpty = cartItems.length === 0;
@@ -139,7 +140,9 @@ export default function CartPage() {
           <ShoppingCart size={20} className="text-red" />
           <h1 className="cart-title">Your Cart</h1>
         </div>
-        <p className="cart-subtitle">{cartItems.length} items in your cart</p>
+        <p className="cart-subtitle">
+          {cartCount} item{cartCount === 1 ? '' : 's'} in your cart
+        </p>
         {authLoading || cartLoading ? (
           <CartSkeleton />
         ) : cartError ? (
@@ -167,11 +170,18 @@ export default function CartPage() {
               </div>
 
               <div className="cart-items-list">
-                {cartItems.map(({ id, qty, product }) => (
-                  <div key={id} className="cart-item-row">
+                {cartItems.map(({ id, qty, product }, i) => (
+                  <div key={id} className="cart-item-row" style={{ '--row-index': i }}>
                     <div className="cart-item-main">
                       <div className="cart-item-thumb">
-                        <ProductThumb icon={product.icon} hue={product.hue} />
+                        {/* Real product photography, same as the product grid.
+                            This used to render the generic icon placeholder,
+                            so the cart looked unrelated to what was browsed. */}
+                        {product.image ? (
+                          <img src={product.image} alt={product.name} loading="lazy" />
+                        ) : (
+                          <ProductThumb icon={product.icon} hue={product.hue} />
+                        )}
                       </div>
                       <div className="cart-item-details">
                         <span className="cart-item-category">
@@ -235,13 +245,19 @@ export default function CartPage() {
                 <h2 className="cart-summary-title">Order Summary</h2>
                 <div className="cart-summary-rows">
                   <div className="cart-summary-row">
-                    <span className="text-muted">Subtotal ({cartItems.length} items)</span>
+                    <span className="text-muted">
+                      Subtotal ({cartCount} item{cartCount === 1 ? '' : 's'})
+                    </span>
                     <span>₹{subtotal.toLocaleString('en-IN')}</span>
                   </div>
-                  <div className="cart-summary-row discount">
-                    <span>Discount</span>
-                    <span>- ₹{discount.toLocaleString('en-IN')}</span>
-                  </div>
+                  {/* Only shown once something actually discounts the order;
+                      a green "- ₹0" row on every cart was just noise. */}
+                  {discount > 0 && (
+                    <div className="cart-summary-row discount">
+                      <span>Discount</span>
+                      <span>- ₹{discount.toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
                   <div className="cart-summary-row">
                     <span className="text-muted">Delivery Charges</span>
                     <span>₹{delivery}</span>
